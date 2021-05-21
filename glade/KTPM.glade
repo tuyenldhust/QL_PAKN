@@ -28,6 +28,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
   <!-- interface-description Phan mem quan ly phan anh kien nghi -->
   <!-- interface-copyright 2021 -->
   <!-- interface-authors Vu Minh Hai, Le Dinh Tuyen -->
+  <object class="GtkWindowGroup"/>
   <object class="GtkListStore" id="all_pakn">
     <columns>
       <!-- column-name ID -->
@@ -74,7 +75,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
           <object class="GtkStack" id="stackMain">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="transition_type">slide-up-down</property>
+            <property name="transition_type">crossfade</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -450,31 +451,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Thống kê</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="name">thongke</property>
-                <property name="title" translatable="yes">Thống kê</property>
-                <property name="position">2</property>
-              </packing>
+              <placeholder/>
             </child>
           </object>
           <packing>
@@ -491,7 +468,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
     <property name="resizable">False</property>
     <property name="window_position">center-always</property>
     <property name="default_width">450</property>
-    <property name="default_height">450</property>
     <property name="gravity">center</property>
     <signal name="destroy" handler="gtk_window_destroy" swapped="no"/>
     <child type="titlebar">
@@ -506,8 +482,10 @@ Author: Vu Minh Hai, Le Dinh Tuyen
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
+            <property name="margin_left">12</property>
             <property name="margin_top">12</property>
-            <property name="margin_bottom">18</property>
+            <property name="margin_bottom">6</property>
             <property name="label" translatable="yes">Login</property>
             <attributes>
               <attribute name="font-desc" value="Z003 Medium Italic 36"/>
@@ -537,8 +515,11 @@ Author: Vu Minh Hai, Le Dinh Tuyen
           <object class="GtkEntry" id="accountEntry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
+            <property name="placeholder_text" translatable="yes">Username</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -564,8 +545,11 @@ Author: Vu Minh Hai, Le Dinh Tuyen
           <object class="GtkEntry" id="passwordEntry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
+            <property name="placeholder_text" translatable="yes">Password</property>
             <property name="input_purpose">password</property>
           </object>
           <packing>
@@ -612,6 +596,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
             <signal name="clicked" handler="on_btn_clicked" swapped="no"/>
