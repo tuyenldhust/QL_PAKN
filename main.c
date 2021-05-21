@@ -6,6 +6,7 @@ GtkWidget *loginWindow;
 GtkWidget *accountEntry;
 GtkWidget *passwordEntry;
 GtkWidget *btnLogin;
+GtkWidget *btnLogout;
 GtkWidget *errorLoginLabel;
 GtkWidget *windowMain;
 GtkWidget *windowMain2;
@@ -15,7 +16,8 @@ GtkWidget *lbl_name;
 GtkWidget *lbl_birthday;
 GtkWidget *lbl_level;
 GtkWidget *lbl_workplace;
-//GtkListStore *listAllPAKN;
+GtkListStore *listAllPAKN;
+gboolean isRememberPass = FALSE;
 
 typedef struct
 {
@@ -39,6 +41,18 @@ typedef struct
 	char phanhoi[20];
 } PAKN;
 
+enum
+{
+	COL_ID = 0,
+	COL_NAME,
+	COL_DATE,
+	COL_CONTENT,
+	COL_TYPE,
+	COL_STATE,
+	COL_RESPONSE,
+	NUM_COLS
+};
+
 gboolean timer_handler(gpointer data)
 {
 	GDateTime *date_time;
@@ -51,18 +65,31 @@ gboolean timer_handler(gpointer data)
 	return TRUE;
 }
 
+void on_isRememberPass_toggled(GtkToggleButton *togglebutton, gpointer user_data)
+{
+
+	if (gtk_toggle_button_get_active(togglebutton))
+	{
+		isRememberPass = TRUE;
+	}
+	else
+	{
+		isRememberPass = FALSE;
+	}
+}
+
 void login()
 {
 	FILE *fp = fopen("account.txt", "r");
 	char read[100], *tmp;
-	char name[50] = "Ho ten: \0", birth[50] = "Ngay sinh: \0", role[30] = "Chuc vu: \0", unit[50] = "Don vi: \0";
+	char name[50] = "Họ và tên: \0", birth[50] = "Ngày sinh: \0", role[30] = "Chức vụ: \0", unit[50] = "Đơn vị: \0";
 	int result = 0;
 	gchar *acc_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(accountEntry)));
 	gchar *pass_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(passwordEntry)));
 
 	if (fp == NULL)
 	{
-		gtk_label_set_text(errorLoginLabel, "Khong the tai du lieu tai khoan");
+		gtk_label_set_text(errorLoginLabel, "Không thể tải dữ liệu tài khoản");
 		return;
 	}
 
@@ -91,15 +118,28 @@ void login()
 			gtk_label_set_text(lbl_birthday, birth);
 			gtk_label_set_text(lbl_level, role);
 			gtk_label_set_text(lbl_workplace, unit);
+			gtk_widget_set_visible(errorLoginLabel, FALSE);
 			gtk_widget_hide(loginWindow);
 			gtk_widget_show(windowMain);
 			return;
 		}
 	}
 
-	gtk_label_set_text(errorLoginLabel, "Tai khoan hoac mat khau khong dung");
+	gtk_widget_set_visible(errorLoginLabel, TRUE);
+	gtk_label_set_text(errorLoginLabel, "Tài khoản hoặc mật khẩu không chính xác");
 
 	return;
+}
+
+void logout()
+{
+	gtk_widget_hide(windowMain);
+	if (!isRememberPass)
+	{
+		gtk_entry_set_text(GTK_ENTRY(accountEntry), "");
+		gtk_entry_set_text(GTK_ENTRY(passwordEntry), "");
+	}
+	gtk_widget_show(loginWindow);
 }
 
 void on_btn_clicked(GtkButton *btn, gpointer data)
@@ -112,10 +152,7 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnLogout") == 0)
 	{
-		gtk_window_close(windowMain);
-		gtk_widget_show(loginWindow);
-		gtk_text_buffer_set_text(accountEntry, "", 0);
-		gtk_text_buffer_set_text(passwordEntry, "", 0);
+		logout();
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnAdd") == 0)
@@ -183,7 +220,7 @@ int main(int argc,
 {
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
-
+	GtkTreeIter iter;
 	// Khởi tạo GTK
 	gtk_init(&argc, &argv);
 
@@ -203,8 +240,32 @@ int main(int argc,
 	lbl_birthday = GTK_LABEL(gtk_builder_get_object(builder, "lbl_birthday"));
 	lbl_level = GTK_LABEL(gtk_builder_get_object(builder, "lbl_level"));
 	lbl_workplace = GTK_LABEL(gtk_builder_get_object(builder, "lbl_workplace"));
-	// btnLogout = GTK_BUTTON(gtk_builder_get_object(buider, "btnLogout"));
-	//listAllPAKN = GTK_LIST_STORE(gtk_builder_get_object(builder, "all_pakn"));
+	btnLogout = GTK_BUTTON(gtk_builder_get_object(builder, "btnLogout"));
+	listAllPAKN = GTK_LIST_STORE(gtk_builder_get_object(builder, "all_pakn"));
+
+	gtk_list_store_append(listAllPAKN, &iter);
+
+	/* Fill fields with some data */
+	gtk_list_store_set(listAllPAKN, &iter,
+										 COL_ID, 1,
+										 COL_NAME, "Average",
+										 COL_DATE, "Aafa",
+										 COL_CONTENT, "asfsafsaf",
+										 COL_TYPE, "safasf",
+										 COL_STATE, "fassafas",
+										 COL_RESPONSE, "Asfsafasf",
+										 -1);
+
+	gtk_list_store_append(listAllPAKN, &iter);
+	gtk_list_store_set(listAllPAKN, &iter,
+										 COL_ID, 2,
+										 COL_NAME, "Average",
+										 COL_DATE, "Aafa",
+										 COL_CONTENT, "asfsafsaf",
+										 COL_TYPE, "safasf",
+										 COL_STATE, "fassafas",
+										 COL_RESPONSE, "Asfsafasf",
+										 -1);
 
 	// Gan time out cho progressBar
 	g_timeout_add(500, close_splash_screen, progressBar);
