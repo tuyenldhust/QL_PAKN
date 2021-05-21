@@ -1,4 +1,4 @@
-ID|Nguoi phan anh|Ngay phan anh|Noi dung|Phan loai|Trang thai|Phan hoi cua cap tren //Moi ghi nhan: 0; Chua giai quyet:1; Da giai quyet:2;
+ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi cua cap tren //Moi ghi nhan: 0; Chua giai quyet:1; Da giai quyet:2;
 1|Nguyen Van C|21/5/2001|Balala|abcxyz|0|Chua co
 2|Vu Van D|19/5/2001|asasf|qwerty|1|Chua co
 3|Hoang Van E|20/5/2001|wwqedvsd|qwgtrhd|2|Se cho nguoi xuong sua

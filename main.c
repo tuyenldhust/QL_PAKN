@@ -1,5 +1,9 @@
 #include <gtk/gtk.h>
 #include <string.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#define INIT_PAKN 100
 
 GtkWidget *window_splash_screen;
 GtkWidget *loginWindow;
@@ -9,7 +13,6 @@ GtkWidget *btnLogin;
 GtkWidget *btnLogout;
 GtkWidget *errorLoginLabel;
 GtkWidget *windowMain;
-GtkWidget *windowMain2;
 GtkWidget *lbl_time;
 GtkWidget *avatar;
 GtkWidget *lbl_name;
@@ -17,7 +20,7 @@ GtkWidget *lbl_birthday;
 GtkWidget *lbl_level;
 GtkWidget *lbl_workplace;
 GtkListStore *listAllPAKN;
-gboolean isRememberPass = FALSE;
+GtkWidget *spinner;
 
 typedef struct
 {
@@ -33,13 +36,17 @@ InfoAccount infoAccount;
 
 typedef struct
 {
+	int id;
 	char nguoiphananh[20];
 	char ngayphananh[20];
 	char noidung[150];
-	int phanloai;
-	char trangthai[20];
+	char phanloai[20];
+	int trangthai;
 	char phanhoi[20];
 } PAKN;
+
+PAKN *pakn;
+int sum = 0;
 
 enum
 {
@@ -58,24 +65,43 @@ gboolean timer_handler(gpointer data)
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();												// get local time
+	date_time = g_date_time_new_now_local();						// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
+	gtk_label_set_text(GTK_LABEL(data), dt_format);					// update label
 	g_free(dt_format);
 	return TRUE;
 }
 
-void on_isRememberPass_toggled(GtkToggleButton *togglebutton, gpointer user_data)
+gboolean close_spinner(gpointer data)
 {
+	static int k = 0;
+	k++;
+	if (k <= 1)
+	{
+		return TRUE;
+	}
 
-	if (gtk_toggle_button_get_active(togglebutton))
-	{
-		isRememberPass = TRUE;
-	}
-	else
-	{
-		isRememberPass = FALSE;
-	}
+	gtk_widget_hide((GtkWindow *)data);
+	gtk_widget_show(windowMain);
+	k = 0;
+	return FALSE;
+}
+
+void InputFilePAKN()
+{
+	FILE *fp = fopen("pakn.txt", "r");
+	if (fp == NULL)
+		return;
+	char read[300];
+	fgets(read, sizeof(read), fp);
+
+	while (!feof(fp))
+		if (fgets(read, sizeof(read), fp) != NULL)
+		{
+			sscanf(read, "%d|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^|]\n", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].ngayphananh, pakn[sum].phanloai, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
+			sum++;
+		}
+	return;
 }
 
 void login()
@@ -120,7 +146,10 @@ void login()
 			gtk_label_set_text(lbl_workplace, unit);
 			gtk_widget_set_visible(errorLoginLabel, FALSE);
 			gtk_widget_hide(loginWindow);
-			gtk_widget_show(windowMain);
+			InputFilePAKN();
+			Display();
+			gtk_widget_show(spinner);
+			g_timeout_add(500, close_spinner, spinner);
 			return;
 		}
 	}
@@ -131,14 +160,37 @@ void login()
 	return;
 }
 
+void Display()
+{
+	GtkTreeIter iter;
+	gtk_list_store_clear(listAllPAKN);
+	int i = 0;
+	for (i = 0; i < sum; ++i)
+	{
+		gtk_list_store_append(listAllPAKN, &iter);
+
+		/* Fill fields with some data */
+
+		gtk_list_store_set(listAllPAKN, &iter,
+						   COL_ID, pakn[i].id,
+						   COL_NAME, pakn[i].nguoiphananh,
+						   COL_DATE, pakn[i].ngayphananh,
+						   COL_CONTENT, pakn[i].noidung,
+						   COL_TYPE, pakn[i].phanloai,
+						   COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
+																										   : "Da giai quyet",
+
+						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+						   -1);
+	}
+}
+
 void logout()
 {
 	gtk_widget_hide(windowMain);
-	if (!isRememberPass)
-	{
-		gtk_entry_set_text(GTK_ENTRY(accountEntry), "");
-		gtk_entry_set_text(GTK_ENTRY(passwordEntry), "");
-	}
+	gtk_entry_set_text(GTK_ENTRY(accountEntry), "");
+	gtk_entry_set_text(GTK_ENTRY(passwordEntry), "");
+	gtk_list_store_clear(listAllPAKN);
 	gtk_widget_show(loginWindow);
 }
 
@@ -179,7 +231,7 @@ void set_css(void)
 	display = gdk_display_get_default();
 	screen = gdk_display_get_default_screen(display);
 	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider),
-																						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+											  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	gtk_css_provider_load_from_file(css_provider, g_file_new_for_path(css_file), &error);
 	g_object_unref(css_provider);
@@ -216,11 +268,10 @@ void gtk_window_destroy()
 }
 
 int main(int argc,
-				 char *argv[])
+		 char *argv[])
 {
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
-	GtkTreeIter iter;
 	// Khởi tạo GTK
 	gtk_init(&argc, &argv);
 
@@ -242,30 +293,9 @@ int main(int argc,
 	lbl_workplace = GTK_LABEL(gtk_builder_get_object(builder, "lbl_workplace"));
 	btnLogout = GTK_BUTTON(gtk_builder_get_object(builder, "btnLogout"));
 	listAllPAKN = GTK_LIST_STORE(gtk_builder_get_object(builder, "all_pakn"));
+	spinner = GTK_WINDOW(gtk_builder_get_object(builder, "spinner"));
 
-	gtk_list_store_append(listAllPAKN, &iter);
-
-	/* Fill fields with some data */
-	gtk_list_store_set(listAllPAKN, &iter,
-										 COL_ID, 1,
-										 COL_NAME, "Average",
-										 COL_DATE, "Aafa",
-										 COL_CONTENT, "asfsafsaf",
-										 COL_TYPE, "safasf",
-										 COL_STATE, "fassafas",
-										 COL_RESPONSE, "Asfsafasf",
-										 -1);
-
-	gtk_list_store_append(listAllPAKN, &iter);
-	gtk_list_store_set(listAllPAKN, &iter,
-										 COL_ID, 2,
-										 COL_NAME, "Average",
-										 COL_DATE, "Aafa",
-										 COL_CONTENT, "asfsafsaf",
-										 COL_TYPE, "safasf",
-										 COL_STATE, "fassafas",
-										 COL_RESPONSE, "Asfsafasf",
-										 -1);
+	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
 	// Gan time out cho progressBar
 	g_timeout_add(500, close_splash_screen, progressBar);
