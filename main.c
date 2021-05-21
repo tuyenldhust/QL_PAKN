@@ -57,8 +57,8 @@ void login()
 	char read[100], *tmp;
 	char name[50] = "Ho ten: \0", birth[50] = "Ngay sinh: \0", role[30] = "Chuc vu: \0", unit[50] = "Don vi: \0";
 	int result = 0;
-	gchar *acc_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(accountEntry));
-	gchar *pass_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(passwordEntry));
+	gchar *acc_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(accountEntry)));
+	gchar *pass_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(passwordEntry)));
 
 	if (fp == NULL)
 	{
@@ -83,7 +83,6 @@ void login()
 			result = 1;
 			tmp = strchr(tmp + 1, '|') + 1;
 			sscanf(tmp, "%[^|]|%[^|]|%[^|]|%[^\n]\n", infoAccount.name, infoAccount.birthday, infoAccount.role, infoAccount.unit);
-			gtk_window_close(loginWindow);
 			strcat(name, infoAccount.name);
 			strcat(birth, infoAccount.birthday);
 			strcat(role, infoAccount.role);
@@ -92,6 +91,7 @@ void login()
 			gtk_label_set_text(lbl_birthday, birth);
 			gtk_label_set_text(lbl_level, role);
 			gtk_label_set_text(lbl_workplace, unit);
+			gtk_widget_hide(loginWindow);
 			gtk_widget_show(windowMain);
 			return;
 		}
