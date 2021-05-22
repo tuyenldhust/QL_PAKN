@@ -1,7 +1,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
 #define INIT_PAKN 100
 
@@ -27,6 +26,11 @@ GtkListStore *listDaGiaiQuyet;
 GtkWidget *spinner;
 GtkWidget *tableQuanLy;
 GtkWidget *addWindow;
+GtkWidget *entryAddName;
+GtkWidget *entryAddType;
+GtkWidget *addContent;
+GtkWidget *revealer;
+GtkWidget *lblNotification;
 
 typedef struct
 {
@@ -68,6 +72,7 @@ enum
 
 void Display();
 void Thongke();
+void showNotification(gchar *, gint);
 
 gboolean timer_handler(gpointer data)
 {
@@ -79,6 +84,20 @@ gboolean timer_handler(gpointer data)
 	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
 	g_free(dt_format);
 	return TRUE;
+}
+
+gboolean close_revealer(gpointer data)
+{
+	static int r = 0;
+	r++;
+	if (r <= 1)
+	{
+		return TRUE;
+	}
+
+	r = 0;
+	gtk_revealer_set_reveal_child(revealer, FALSE);
+	return FALSE;
 }
 
 gboolean close_spinner(gpointer data)
@@ -93,7 +112,20 @@ gboolean close_spinner(gpointer data)
 	gtk_widget_hide((GtkWindow *)data);
 	gtk_window_present(windowMain);
 	k = 0;
+	showNotification("Chào mừng bạn đã quay lại!", 1000);
 	return FALSE;
+}
+
+void showNotification(gchar *str, gint timeout)
+{
+	gtk_label_set_text(lblNotification, str);
+	g_timeout_add(timeout, close_revealer, revealer);
+	gtk_revealer_set_reveal_child(revealer, TRUE);
+}
+
+void closeNotification()
+{
+	gtk_revealer_set_reveal_child(revealer, FALSE);
 }
 
 // void deletePAKN()
@@ -283,6 +315,35 @@ void Thongke()
 	}
 }
 
+void AddPAKN()
+{
+	//Lấy mean từ TextView
+	GtkTextIter start, end;
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(addContent);
+	gchar *content;
+	int year, month, day, hour, minute, second;
+	gtk_text_buffer_get_bounds(buffer, &start, &end);
+	content = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+	gchar *name = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddName)));
+	gchar *type = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddType)));
+	PAKN new;
+	strcpy(new.nguoiphananh, name);
+	strcpy(new.phanloai, type);
+	strcpy(new.noidung, content);
+	new.trangthai = 0;
+	//Add id
+	// GDateTime *date_time;
+	// gchar *dt_format;
+
+	// date_time = g_date_time_new_now_local();						// get local time
+	// dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
+	//
+
+	pakn[sum++] = new;
+	Display();
+	Thongke();
+}
+
 void logout()
 {
 	gtk_widget_hide(windowMain);
@@ -311,12 +372,26 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnAdd") == 0)
 	{
 		gtk_window_present(addWindow);
-		AddPAKN();
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnDel") == 0)
 	{
 		deletePAKN();
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnAddWordWindow") == 0)
+	{
+		// AddPAKN();
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCloseAddWordWindow") == 0)
+	{
+		gtk_widget_hide(addWindow);
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnDelNotification") == 0)
+	{
+		closeNotification();
 	}
 }
 
@@ -402,6 +477,11 @@ int main(int argc,
 	tableQuanLy = GTK_TREE_VIEW(gtk_builder_get_object(builder, "quanly"));
 	spinner = GTK_WINDOW(gtk_builder_get_object(builder, "spinner"));
 	addWindow = GTK_WINDOW(gtk_builder_get_object(builder, "addWindow"));
+	entryAddName = GTK_ENTRY(gtk_builder_get_object(builder, "entryAddName"));
+	entryAddType = GTK_ENTRY(gtk_builder_get_object(builder, "entryAddType"));
+	addContent = GTK_WIDGET(gtk_builder_get_object(builder, "addContent"));
+	revealer = GTK_REVEALER(gtk_builder_get_object(builder, "revealer"));
+	lblNotification = GTK_LABEL(gtk_builder_get_object(builder, "lblNotification"));
 
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
