@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Quản lý phản ánh, kiến nghị
+Comment=Quản lý phản ánh, kiến nghị
+Exec=main
+Icon=application.png
+Terminal=false
