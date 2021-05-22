@@ -585,7 +585,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxText" id="quy">
+                          <object class="GtkComboBoxText" id="quyComboText">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="valign">center</property>
@@ -611,7 +611,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxText" id="nam">
+                          <object class="GtkComboBoxText" id="namComboText">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="valign">center</property>
@@ -635,6 +635,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                             <property name="margin_right">6</property>
                             <property name="margin_top">6</property>
                             <property name="margin_bottom">6</property>
+                            <signal name="clicked" handler="on_btn_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1026,8 +1027,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">This is an app-notification. Click the button to dismiss</property>
                     <attributes>
-                      <attribute name="font-desc" value="Times New Roman, Italic 15"/>
-                      <attribute name="style" value="italic"/>
+                      <attribute name="font-desc" value="Times New Roman, 15"/>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
@@ -1282,8 +1282,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">This is an app-notification. Click the button to dismiss</property>
                     <attributes>
-                      <attribute name="font-desc" value="Times New Roman, Italic 12"/>
-                      <attribute name="style" value="italic"/>
+                      <attribute name="font-desc" value="Times New Roman, 12"/>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>

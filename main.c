@@ -35,7 +35,11 @@ GtkWidget *lblNotifi;
 GtkWidget *lblNotifiAdd;
 GtkWidget *searchEntry;
 GtkWidget *btnCombine;
-GtkWidget *btnPrint;
+GtkWidget *btnPrintList;
+GtkWidget *quyComboText;
+GtkWidget *namComboText;
+GtkWidget *btnFilter;
+GtkWidget *btnPrintAnalysis;
 
 typedef struct
 {
@@ -86,9 +90,9 @@ gboolean timer_handler(gpointer data)
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	gtk_label_set_text(GTK_LABEL(data), dt_format);					// update label
+	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
 	g_free(dt_format);
 	return TRUE;
 }
@@ -274,16 +278,16 @@ void Display()
 		/* Fill fields with some data */
 
 		gtk_list_store_set(listAllPAKN, &iter,
-						   COL_ID, pakn[i].id,
-						   COL_NAME, pakn[i].nguoiphananh,
-						   COL_DATE, pakn[i].ngayphananh,
-						   COL_TYPE, pakn[i].phanloai,
-						   COL_CONTENT, pakn[i].noidung,
-						   COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
-																										   : "Da giai quyet",
+											 COL_ID, pakn[i].id,
+											 COL_NAME, pakn[i].nguoiphananh,
+											 COL_DATE, pakn[i].ngayphananh,
+											 COL_TYPE, pakn[i].phanloai,
+											 COL_CONTENT, pakn[i].noidung,
+											 COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
+																																																			 : "Da giai quyet",
 
-						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-						   -1);
+											 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+											 -1);
 	}
 }
 
@@ -310,16 +314,16 @@ void Search()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listAllPAKN, &iter,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
-																											   : "Da giai quyet",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
+																																																				 : "Da giai quyet",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+												 -1);
 		}
 	}
 	g_free(search);
@@ -345,12 +349,12 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listMoiGhiNhan, &iter1,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 -1);
 			break;
 
 		case 1:
@@ -359,12 +363,12 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listChuaGiaiQuyet, &iter2,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 -1);
 			break;
 
 		default:
@@ -373,13 +377,13 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listDaGiaiQuyet, &iter3,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_RESPONSE - 1, pakn[i].phanhoi,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_RESPONSE - 1, pakn[i].phanhoi,
+												 -1);
 		}
 	}
 }
@@ -411,7 +415,7 @@ void AddPAKN()
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	new.id = second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -437,7 +441,7 @@ long CreateID()
 	gchar *dt_format;
 	int year, month, day, hour, minute, second;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	return second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -484,6 +488,22 @@ void Combine()
 					CombinePAKN(i, j);
 					DeletePAKN(j);
 				}
+	}
+}
+
+void filter()
+{
+	gchar *quy, *nam;
+
+	if ((gtk_combo_box_text_get_active_text(quyComboText) == NULL) || (gtk_combo_box_text_get_active_text(namComboText) == NULL))
+	{
+		showNotification(revealer, lblNotifi, "Vui lòng chọn Quý và Năm để lọc dữ liệu!!!", 1200);
+	}
+	else
+	{
+		quy = gtk_combo_box_text_get_active_text(quyComboText);
+		nam = gtk_combo_box_text_get_active_text(namComboText);
+		g_print("%s - %s\n", quy, nam);
 	}
 }
 
@@ -534,6 +554,11 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	{
 		// Combine();
 	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnFilter") == 0)
+	{
+		filter();
+	}
 }
 
 void ExportToFile()
@@ -566,7 +591,7 @@ void set_css(void)
 	display = gdk_display_get_default();
 	screen = gdk_display_get_default_screen(display);
 	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider),
-											  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+																						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	gtk_css_provider_load_from_file(css_provider, g_file_new_for_path(css_file), &error);
 	g_object_unref(css_provider);
@@ -603,7 +628,7 @@ void gtk_window_destroy()
 }
 
 int main(int argc,
-		 char *argv[])
+				 char *argv[])
 {
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
@@ -612,6 +637,8 @@ int main(int argc,
 
 	// Load giao diện từ file .glade vào biến builder
 	builder = gtk_builder_new_from_file("glade/KTPM.glade");
+
+	// Gán các widget được lấy từ file .glade
 	window_splash_screen = GTK_WINDOW(gtk_builder_get_object(builder, "splash-screen"));
 	GtkProgressBar *progressBar = GTK_PROGRESS_BAR(gtk_builder_get_object(builder, "loadingProgress"));
 	loginWindow = GTK_WINDOW(gtk_builder_get_object(builder, "loginWindow"));
@@ -644,12 +671,29 @@ int main(int argc,
 	lblNotifiAdd = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifiAdd"));
 	searchEntry = GTK_ENTRY(gtk_builder_get_object(builder, "searchEntry"));
 	btnCombine = GTK_BUTTON(gtk_builder_get_object(builder, "btnCombine"));
-	btnPrint = GTK_BUTTON(gtk_builder_get_object(builder, "btnPrint"));
-	//Them id button
+	btnPrintList = GTK_BUTTON(gtk_builder_get_object(builder, "btnPrintList"));
+	btnFilter = GTK_BUTTON(gtk_builder_get_object(builder, "btnFilter"));
+	btnPrintAnalysis = GTK_BUTTON(gtk_builder_get_object(builder, "btnPrintAnalysis"));
+	quyComboText = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "quyComboText"));
+	namComboText = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "namComboText"));
 
+	gchar tmp[10];
+	for (int i = 1; i <= 4; i++)
+	{
+		sprintf(tmp, "%d", i);
+		gtk_combo_box_text_append_text(quyComboText, tmp);
+	}
+
+	for (int i = 2021; i >= 2000; i--)
+	{
+		sprintf(tmp, "%d", i);
+		gtk_combo_box_text_append_text(namComboText, tmp);
+	}
+
+	// Cấp phát bộ nhớ động
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
-	// Gan time out cho progressBar
+	// Gán time out cho progressBar
 	g_timeout_add(500, close_splash_screen, progressBar);
 	g_timeout_add_seconds(1, (GSourceFunc)timer_handler, lbl_time);
 
