@@ -25,6 +25,8 @@ GtkListStore *listMoiGhiNhan;
 GtkListStore *listChuaGiaiQuyet;
 GtkListStore *listDaGiaiQuyet;
 GtkWidget *spinner;
+GtkWidget *tableQuanLy;
+GtkWidget *addWindow;
 
 typedef struct
 {
@@ -72,9 +74,9 @@ gboolean timer_handler(gpointer data)
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	gtk_label_set_text(GTK_LABEL(data), dt_format);					// update label
+	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
 	g_free(dt_format);
 	return TRUE;
 }
@@ -89,7 +91,7 @@ gboolean close_spinner(gpointer data)
 	}
 
 	gtk_widget_hide((GtkWindow *)data);
-	gtk_widget_show(windowMain);
+	gtk_window_present(windowMain);
 	k = 0;
 	return FALSE;
 }
@@ -111,6 +113,22 @@ gboolean close_spinner(gpointer data)
 // 		}
 // 	}
 // }
+
+void on_row_activated(GtkTreeView *quanly, GtkTreeViewColumn *treeViewColumn, gpointer user_data)
+{
+	g_print("Double click\n");
+}
+
+void deletePAKN()
+{
+	GtkTreeSelection *select = gtk_tree_view_get_selection(tableQuanLy);
+
+	int countRowSelected = gtk_tree_selection_count_selected_rows(select);
+
+	if (countRowSelected == 0)
+	{
+	}
+}
 
 void InputFilePAKN()
 {
@@ -198,16 +216,16 @@ void Display()
 		/* Fill fields with some data */
 
 		gtk_list_store_set(listAllPAKN, &iter,
-						   COL_ID, pakn[i].id,
-						   COL_NAME, pakn[i].nguoiphananh,
-						   COL_DATE, pakn[i].ngayphananh,
-						   COL_TYPE, pakn[i].phanloai,
-						   COL_CONTENT, pakn[i].noidung,
-						   COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
-																										   : "Da giai quyet",
+											 COL_ID, pakn[i].id,
+											 COL_NAME, pakn[i].nguoiphananh,
+											 COL_DATE, pakn[i].ngayphananh,
+											 COL_TYPE, pakn[i].phanloai,
+											 COL_CONTENT, pakn[i].noidung,
+											 COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
+																																																			 : "Da giai quyet",
 
-						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-						   -1);
+											 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+											 -1);
 	}
 }
 
@@ -226,12 +244,12 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listMoiGhiNhan, &iter1,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 -1);
 			break;
 
 		case 1:
@@ -240,12 +258,12 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listChuaGiaiQuyet, &iter2,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 -1);
 			break;
 
 		default:
@@ -254,13 +272,13 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listDaGiaiQuyet, &iter3,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_RESPONSE - 1, pakn[i].phanhoi,
-							   -1);
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_RESPONSE - 1, pakn[i].phanhoi,
+												 -1);
 		}
 	}
 }
@@ -292,12 +310,13 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnAdd") == 0)
 	{
-		// AddPAKN();
+		gtk_window_present(addWindow);
+		AddPAKN();
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnDel") == 0)
 	{
-		// deletePAKN();
+		deletePAKN();
 	}
 }
 
@@ -314,7 +333,7 @@ void set_css(void)
 	display = gdk_display_get_default();
 	screen = gdk_display_get_default_screen(display);
 	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider),
-											  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+																						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	gtk_css_provider_load_from_file(css_provider, g_file_new_for_path(css_file), &error);
 	g_object_unref(css_provider);
@@ -351,7 +370,7 @@ void gtk_window_destroy()
 }
 
 int main(int argc,
-		 char *argv[])
+				 char *argv[])
 {
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
@@ -380,7 +399,9 @@ int main(int argc,
 	listMoiGhiNhan = GTK_LIST_STORE(gtk_builder_get_object(builder, "moighinhan"));
 	listChuaGiaiQuyet = GTK_LIST_STORE(gtk_builder_get_object(builder, "chuagiaiquyet"));
 	listDaGiaiQuyet = GTK_LIST_STORE(gtk_builder_get_object(builder, "dagiaiquyet"));
+	tableQuanLy = GTK_TREE_VIEW(gtk_builder_get_object(builder, "quanly"));
 	spinner = GTK_WINDOW(gtk_builder_get_object(builder, "spinner"));
+	addWindow = GTK_WINDOW(gtk_builder_get_object(builder, "addWindow"));
 
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
