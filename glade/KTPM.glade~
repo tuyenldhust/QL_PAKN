@@ -32,17 +32,17 @@ Author: Vu Minh Hai, Le Dinh Tuyen
     <columns>
       <!-- column-name ID -->
       <column type="gint"/>
-      <!-- column-name Nguoi -->
+      <!-- column-name Người phản ánh -->
       <column type="gchararray"/>
-      <!-- column-name Ngay -->
+      <!-- column-name Ngày phản ánh -->
       <column type="gchararray"/>
-      <!-- column-name Noi -->
+      <!-- column-name Phân loại -->
       <column type="gchararray"/>
-      <!-- column-name Phan -->
+      <!-- column-name Nội dung -->
       <column type="gchararray"/>
-      <!-- column-name Trang -->
+      <!-- column-name Trạng thái -->
       <column type="gchararray"/>
-      <!-- column-name Phan1 -->
+      <!-- column-name Phản hồi của cấp trên -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -56,7 +56,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
       <column type="gchararray"/>
       <!-- column-name Phân loại -->
       <column type="gchararray"/>
-      <!-- column-name Nội dung -->
+      <!-- column-name  Nội dung -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -219,6 +219,15 @@ Author: Vu Minh Hai, Le Dinh Tuyen
       <!-- column-name Nội dung -->
       <column type="gchararray"/>
     </columns>
+    <data>
+      <row>
+        <col id="0">0</col>
+        <col id="1" translatable="yes"/>
+        <col id="2" translatable="yes"/>
+        <col id="3" translatable="yes"/>
+        <col id="4" translatable="yes"/>
+      </row>
+    </data>
   </object>
   <object class="GtkWindow" id="windowMain">
     <property name="can_focus">False</property>
