@@ -9,6 +9,7 @@ GtkWidget *window_splash_screen;
 GtkWidget *loginWindow;
 GtkWidget *accountEntry;
 GtkWidget *passwordEntry;
+GtkWidget *btnDel;
 GtkWidget *btnLogin;
 GtkWidget *btnLogout;
 GtkWidget *errorLoginLabel;
@@ -20,6 +21,9 @@ GtkWidget *lbl_birthday;
 GtkWidget *lbl_level;
 GtkWidget *lbl_workplace;
 GtkListStore *listAllPAKN;
+GtkListStore *listMoiGhiNhan;
+GtkListStore *listChuaGiaiQuyet;
+GtkListStore *listDaGiaiQuyet;
 GtkWidget *spinner;
 
 typedef struct
@@ -53,12 +57,15 @@ enum
 	COL_ID = 0,
 	COL_NAME,
 	COL_DATE,
-	COL_CONTENT,
 	COL_TYPE,
+	COL_CONTENT,
 	COL_STATE,
 	COL_RESPONSE,
 	NUM_COLS
 };
+
+void Display();
+void Thongke();
 
 gboolean timer_handler(gpointer data)
 {
@@ -86,6 +93,24 @@ gboolean close_spinner(gpointer data)
 	k = 0;
 	return FALSE;
 }
+
+// void deletePAKN()
+// {
+// 	int i, del, j;
+// 	// gchar *del_id = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(accountEntry)));
+// 	//del = atoi(del_id);
+// 	for (i = 0; i < sum; ++i)
+// 	{
+// 		if (pakn[i].id == del)
+// 		{
+// 			for (j = i; j < sum - 1; ++j)
+// 				pakn[j] = pakn[j + 1];
+// 			sum--;
+// 			Display();
+// 			Thongke();
+// 		}
+// 	}
+// }
 
 void InputFilePAKN()
 {
@@ -148,6 +173,7 @@ void login()
 			gtk_widget_hide(loginWindow);
 			InputFilePAKN();
 			Display();
+			Thongke();
 			gtk_widget_show(spinner);
 			g_timeout_add(500, close_spinner, spinner);
 			return;
@@ -175,13 +201,67 @@ void Display()
 						   COL_ID, pakn[i].id,
 						   COL_NAME, pakn[i].nguoiphananh,
 						   COL_DATE, pakn[i].ngayphananh,
-						   COL_CONTENT, pakn[i].noidung,
 						   COL_TYPE, pakn[i].phanloai,
+						   COL_CONTENT, pakn[i].noidung,
 						   COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
 																										   : "Da giai quyet",
 
 						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
 						   -1);
+	}
+}
+
+void Thongke()
+{
+	int i;
+	GtkTreeIter iter1, iter2, iter3;
+
+	for (i = 0; i < sum; ++i)
+	{
+		switch (pakn[i].trangthai)
+		{
+		case 0:
+			gtk_list_store_append(listMoiGhiNhan, &iter1);
+
+			/* Fill fields with some data */
+
+			gtk_list_store_set(listMoiGhiNhan, &iter1,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_CONTENT, pakn[i].noidung,
+							   -1);
+			break;
+
+		case 1:
+			gtk_list_store_append(listChuaGiaiQuyet, &iter2);
+
+			/* Fill fields with some data */
+
+			gtk_list_store_set(listChuaGiaiQuyet, &iter2,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_CONTENT, pakn[i].noidung,
+							   -1);
+			break;
+
+		default:
+			gtk_list_store_append(listDaGiaiQuyet, &iter3);
+
+			/* Fill fields with some data */
+
+			gtk_list_store_set(listDaGiaiQuyet, &iter3,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_RESPONSE - 1, pakn[i].phanhoi,
+							   -1);
+		}
 	}
 }
 
@@ -191,6 +271,9 @@ void logout()
 	gtk_entry_set_text(GTK_ENTRY(accountEntry), "");
 	gtk_entry_set_text(GTK_ENTRY(passwordEntry), "");
 	gtk_list_store_clear(listAllPAKN);
+	gtk_list_store_clear(listMoiGhiNhan);
+	gtk_list_store_clear(listChuaGiaiQuyet);
+	gtk_list_store_clear(listDaGiaiQuyet);
 	gtk_widget_show(loginWindow);
 }
 
@@ -209,12 +292,12 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnAdd") == 0)
 	{
-		//Code
+		// AddPAKN();
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnDel") == 0)
 	{
-		//Code
+		// deletePAKN();
 	}
 }
 
@@ -283,6 +366,7 @@ int main(int argc,
 	accountEntry = GTK_ENTRY(gtk_builder_get_object(builder, "accountEntry"));
 	passwordEntry = GTK_ENTRY(gtk_builder_get_object(builder, "passwordEntry"));
 	btnLogin = GTK_BUTTON(gtk_builder_get_object(builder, "btnLogin"));
+	btnDel = GTK_BUTTON(gtk_builder_get_object(builder, "btnDel"));
 	errorLoginLabel = GTK_LABEL(gtk_builder_get_object(builder, "errorLoginLabel"));
 	windowMain = GTK_WINDOW(gtk_builder_get_object(builder, "windowMain"));
 	lbl_time = GTK_LABEL(gtk_builder_get_object(builder, "lbl_time"));
@@ -293,6 +377,9 @@ int main(int argc,
 	lbl_workplace = GTK_LABEL(gtk_builder_get_object(builder, "lbl_workplace"));
 	btnLogout = GTK_BUTTON(gtk_builder_get_object(builder, "btnLogout"));
 	listAllPAKN = GTK_LIST_STORE(gtk_builder_get_object(builder, "all_pakn"));
+	listMoiGhiNhan = GTK_LIST_STORE(gtk_builder_get_object(builder, "moighinhan"));
+	listChuaGiaiQuyet = GTK_LIST_STORE(gtk_builder_get_object(builder, "chuagiaiquyet"));
+	listDaGiaiQuyet = GTK_LIST_STORE(gtk_builder_get_object(builder, "dagiaiquyet"));
 	spinner = GTK_WINDOW(gtk_builder_get_object(builder, "spinner"));
 
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));

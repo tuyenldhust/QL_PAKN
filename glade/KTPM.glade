@@ -46,6 +46,180 @@ Author: Vu Minh Hai, Le Dinh Tuyen
       <column type="gchararray"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="chuagiaiquyet">
+    <columns>
+      <!-- column-name ID -->
+      <column type="guint"/>
+      <!-- column-name Người phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Ngày phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Phân loại -->
+      <column type="gchararray"/>
+      <!-- column-name Nội dung -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="dagiaiquyet">
+    <columns>
+      <!-- column-name ID -->
+      <column type="guint"/>
+      <!-- column-name Người phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Ngày phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Phân loại -->
+      <column type="gchararray"/>
+      <!-- column-name Nội dung -->
+      <column type="gchararray"/>
+      <!-- column-name Phản hồi của cấp trên -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="loginWindow">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Đăng nhập</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center-always</property>
+    <property name="default_width">450</property>
+    <property name="gravity">center</property>
+    <signal name="destroy" handler="gtk_window_destroy" swapped="no"/>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">start</property>
+            <property name="margin_left">12</property>
+            <property name="margin_top">12</property>
+            <property name="margin_bottom">6</property>
+            <property name="label" translatable="yes">Login</property>
+            <attributes>
+              <attribute name="font-desc" value="Z003 Medium Italic 36"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="label" translatable="yes">Username</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="accountEntry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="placeholder_text" translatable="yes">Username</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="label" translatable="yes">Password</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="passwordEntry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="placeholder_text" translatable="yes">Password</property>
+            <property name="input_purpose">password</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="errorLoginLabel">
+            <property name="can_focus">False</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btnLogin">
+            <property name="label" translatable="yes">Login</property>
+            <property name="name">btnLogin</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_left">12</property>
+            <property name="margin_right">12</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <signal name="clicked" handler="on_btn_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">7</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkListStore" id="moighinhan">
+    <columns>
+      <!-- column-name ID -->
+      <column type="gint"/>
+      <!-- column-name Người phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Ngày phản ánh -->
+      <column type="gchararray"/>
+      <!-- column-name Phân loại -->
+      <column type="gchararray"/>
+      <!-- column-name Nội dung -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="windowMain">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Phần mềm quản lý phản ánh, kiến nghị</property>
@@ -75,6 +249,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
           <object class="GtkStack" id="stackMain">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="transition_duration">350</property>
             <property name="transition_type">crossfade</property>
             <child>
               <object class="GtkBox">
@@ -294,7 +469,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                             <property name="headers_clickable">False</property>
                             <property name="reorderable">True</property>
                             <property name="rules_hint">True</property>
-                            <property name="hover_selection">True</property>
                             <property name="rubber_banding">True</property>
                             <property name="enable_tree_lines">True</property>
                             <property name="activate_on_single_click">True</property>
@@ -307,6 +481,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">ID</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="id"/>
                                   <attributes>
@@ -319,6 +494,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Người phản ánh</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="nguoiphananh"/>
                                   <attributes>
@@ -331,6 +507,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Ngày phản ánh</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="ngayphananh"/>
                                   <attributes>
@@ -343,6 +520,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Nội dung</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="noidung"/>
                                   <attributes>
@@ -355,6 +533,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Phân loại</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="phanloai"/>
                                   <attributes>
@@ -367,6 +546,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Trạng thái</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="trangthai"/>
                                   <attributes>
@@ -379,6 +559,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                               <object class="GtkTreeViewColumn">
                                 <property name="sizing">fixed</property>
                                 <property name="title" translatable="yes">Phản hồi</property>
+                                <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="phanhoi"/>
                                   <attributes>
@@ -402,8 +583,9 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkButton" id="btn_add2">
+                          <object class="GtkButton" id="btnAdd">
                             <property name="label" translatable="yes">Thêm mới</property>
+                            <property name="name">btnAdd</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -415,8 +597,9 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="btn_del2">
+                          <object class="GtkButton" id="btnDel">
                             <property name="label" translatable="yes">Xóa</property>
+                            <property name="name">btnDel</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -448,140 +631,315 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkStackSwitcher">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="stack">stack1</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkStack" id="stack1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="transition_duration">500</property>
+                    <property name="transition_type">slide-left-right</property>
+                    <property name="interpolate_size">True</property>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">never</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTreeView">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">moighinhan</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="sizing">autosize</property>
+                                <property name="title" translatable="yes">ID</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="sizing">autosize</property>
+                                <property name="title" translatable="yes">Người phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="sizing">autosize</property>
+                                <property name="title" translatable="yes">Ngày phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">2</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="sizing">autosize</property>
+                                <property name="title" translatable="yes">Phân loại</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">3</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Nội dung</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">4</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">moighinhan</property>
+                        <property name="title" translatable="yes">Mới ghi nhận</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">never</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTreeView">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">chuagiaiquyet</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">ID</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Người phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Ngày phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Phân loại</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">3</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Nội dung</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">4</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">chuagiaiquyet</property>
+                        <property name="title" translatable="yes">Chưa giải quyết</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">never</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTreeView">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">dagiaiquyet</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">ID</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Người phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Ngày phản ánh</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">2</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Phân loại</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">3</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="sizing">autosize</property>
+                                <property name="title" translatable="yes">Nội dung</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">4</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Phản hồi của cấp trên</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">5</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">dagiaiquyet</property>
+                        <property name="title" translatable="yes">Đã giải quyết</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="name">thongke</property>
+                <property name="title" translatable="yes">Thống kê</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="resize">True</property>
             <property name="shrink">False</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkWindow" id="loginWindow">
-    <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Đăng nhập</property>
-    <property name="resizable">False</property>
-    <property name="window_position">center-always</property>
-    <property name="default_width">450</property>
-    <property name="gravity">center</property>
-    <signal name="destroy" handler="gtk_window_destroy" swapped="no"/>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="halign">start</property>
-            <property name="margin_left">12</property>
-            <property name="margin_top">12</property>
-            <property name="margin_bottom">6</property>
-            <property name="label" translatable="yes">Login</property>
-            <attributes>
-              <attribute name="font-desc" value="Z003 Medium Italic 36"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-            <property name="label" translatable="yes">Username</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="accountEntry">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_left">12</property>
-            <property name="margin_right">12</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-            <property name="placeholder_text" translatable="yes">Username</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-            <property name="label" translatable="yes">Password</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="passwordEntry">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_left">12</property>
-            <property name="margin_right">12</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-            <property name="placeholder_text" translatable="yes">Password</property>
-            <property name="input_purpose">password</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="errorLoginLabel">
-            <property name="can_focus">False</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="btnLogin">
-            <property name="label" translatable="yes">Login</property>
-            <property name="name">btnLogin</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="margin_left">12</property>
-            <property name="margin_right">12</property>
-            <property name="margin_top">6</property>
-            <property name="margin_bottom">6</property>
-            <signal name="clicked" handler="on_btn_clicked" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">7</property>
           </packing>
         </child>
       </object>
