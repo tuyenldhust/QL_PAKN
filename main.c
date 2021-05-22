@@ -34,6 +34,8 @@ GtkWidget *revealer2;
 GtkWidget *lblNotifi;
 GtkWidget *lblNotifiAdd;
 GtkWidget *searchEntry;
+GtkWidget *btnCombine;
+GtkWidget *btnPrint;
 
 typedef struct
 {
@@ -50,12 +52,12 @@ InfoAccount infoAccount;
 typedef struct
 {
 	long id;
-	char nguoiphananh[20];
-	char ngayphananh[20];
-	char noidung[150];
+	char nguoiphananh[500];
+	char ngayphananh[500];
+	char noidung[250];
 	char phanloai[20];
 	int trangthai;
-	char phanhoi[20];
+	char phanhoi[200];
 } PAKN;
 
 PAKN *pakn;
@@ -77,6 +79,7 @@ void Display();
 void Thongke();
 void showNotification(GtkRevealer *, GtkLabel *, gchar *, gint);
 void closeNotification(GtkRevealer *revealer);
+long CreateID();
 
 gboolean timer_handler(gpointer data)
 {
@@ -173,14 +176,6 @@ void deletePAKN()
 void InputFilePAKN()
 {
 	FILE *fp = fopen("pakn.txt", "r");
-	int year, month, day, hour, minute, second, month1, year1, date1;
-	GDateTime *date_time;
-	gchar *dt_format;
-
-	date_time = g_date_time_new_now_local();						// get local time
-	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
-
 	if (fp == NULL)
 		return;
 	char read[300];
@@ -190,14 +185,9 @@ void InputFilePAKN()
 		if (fgets(read, sizeof(read), fp) != NULL)
 		{
 			sscanf(read, "%ld|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^|]\n", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].ngayphananh, pakn[sum].phanloai, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
-			sscanf(pakn[sum].ngayphananh, "%d/%d/%d", &date1, &month1, &year1);
-
-			if (!pakn[sum].trangthai && (day != date1 || month != month1 || year != year1))
-				pakn[sum].trangthai = 1;
 			sum++;
 		}
 	fclose(fp);
-	g_free(dt_format);
 	return;
 }
 
@@ -297,7 +287,7 @@ void Display()
 	}
 }
 
-void on_searchEntry_activate()
+void Search()
 {
 	GtkTreeIter iter;
 	gtk_list_store_clear(listAllPAKN);
@@ -441,6 +431,18 @@ void AddPAKN()
 	g_free(dt_format);
 }
 
+long CreateID()
+{
+	GDateTime *date_time;
+	gchar *dt_format;
+	int year, month, day, hour, minute, second;
+
+	date_time = g_date_time_new_now_local();						// get local time
+	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
+	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
+	return second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
+}
+
 void logout()
 {
 	gtk_widget_hide(windowMain);
@@ -452,6 +454,37 @@ void logout()
 	gtk_list_store_clear(listDaGiaiQuyet);
 	ExportToFile();
 	gtk_widget_show(loginWindow);
+}
+
+void CombinePAKN(int i, int j)
+{
+	strcat(pakn[i].nguoiphananh, pakn[j].nguoiphananh);
+	strcat(pakn[i].ngayphananh, pakn[j].ngayphananh);
+	pakn[i].id = CreateID();
+}
+
+void DeletePAKN(int i)
+{
+	int j;
+	for (j = i; j < sum - 1; ++j)
+		pakn[j] = pakn[j + 1];
+	sum--;
+}
+
+void Combine()
+{
+	int num = 1, i, j;
+
+	for (i = 0; i < sum; ++i)
+	{
+		if (pakn[i].trangthai == 0)
+			for (j = i + 1; j < sum; ++j)
+				if (!pakn[j].trangthai && !strcmp(pakn[i].phanloai, pakn[j].phanloai) && !strcmp(pakn[i].noidung, pakn[j].noidung))
+				{
+					CombinePAKN(i, j);
+					DeletePAKN(j);
+				}
+	}
 }
 
 void on_btn_clicked(GtkButton *btn, gpointer data)
@@ -495,6 +528,11 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCloseNotifiAdd") == 0)
 	{
 		closeNotification(revealer2);
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCombine") == 0)
+	{
+		// Combine();
 	}
 }
 
@@ -605,6 +643,9 @@ int main(int argc,
 	lblNotifi = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifi"));
 	lblNotifiAdd = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifiAdd"));
 	searchEntry = GTK_ENTRY(gtk_builder_get_object(builder, "searchEntry"));
+	btnCombine = GTK_BUTTON(gtk_builder_get_object(builder, "btnCombine"));
+	btnPrint = GTK_BUTTON(gtk_builder_get_object(builder, "btnPrint"));
+	//Them id button
 
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
