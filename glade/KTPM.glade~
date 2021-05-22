@@ -278,12 +278,14 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSearchEntry">
+                          <object class="GtkSearchEntry" id="searchEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="primary_icon_name">edit-find-symbolic</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">False</property>
+                            <signal name="activate" handler="on_searchEntry_activate" swapped="no"/>
+                            <signal name="delete-text" handler="on_searchEntry_delete_text" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1027,8 +1029,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">This is an app-notification. Click the button to dismiss</property>
                     <attributes>
-                      <attribute name="font-desc" value="Times New Roman, Italic 15"/>
-                      <attribute name="style" value="italic"/>
+                      <attribute name="font-desc" value="Times New Roman, 15"/>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
@@ -1283,8 +1284,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">This is an app-notification. Click the button to dismiss</property>
                     <attributes>
-                      <attribute name="font-desc" value="Times New Roman, Italic 12"/>
-                      <attribute name="style" value="italic"/>
+                      <attribute name="font-desc" value="Times New Roman, 12"/>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
@@ -1417,6 +1417,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
             <property name="placeholder_text" translatable="yes">Username</property>
+            <property name="input_hints">GTK_INPUT_HINT_WORD_COMPLETION | GTK_INPUT_HINT_NONE</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1446,6 +1447,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
             <property name="margin_right">12</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
+            <property name="visibility">False</property>
+            <property name="invisible_char">*</property>
             <property name="placeholder_text" translatable="yes">Password</property>
             <property name="input_purpose">password</property>
           </object>

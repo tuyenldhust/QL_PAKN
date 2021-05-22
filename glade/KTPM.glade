@@ -278,12 +278,14 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSearchEntry">
+                          <object class="GtkSearchEntry" id="searchEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="primary_icon_name">edit-find-symbolic</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">False</property>
+                            <signal name="activate" handler="on_searchEntry_activate" swapped="no"/>
+                            <signal name="delete-text" handler="on_searchEntry_delete_text" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -326,6 +328,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <property name="fixed_height_mode">True</property>
                                 <property name="hover_selection">True</property>
                                 <property name="hover_expand">True</property>
+                                <property name="rubber_banding">True</property>
                                 <property name="enable_grid_lines">both</property>
                                 <property name="enable_tree_lines">True</property>
                                 <child internal-child="selection">
@@ -1415,6 +1418,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
             <property name="placeholder_text" translatable="yes">Username</property>
+            <property name="input_hints">GTK_INPUT_HINT_WORD_COMPLETION | GTK_INPUT_HINT_NONE</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1444,6 +1448,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
             <property name="margin_right">12</property>
             <property name="margin_top">6</property>
             <property name="margin_bottom">6</property>
+            <property name="visibility">False</property>
+            <property name="invisible_char">*</property>
             <property name="placeholder_text" translatable="yes">Password</property>
             <property name="input_purpose">password</property>
           </object>

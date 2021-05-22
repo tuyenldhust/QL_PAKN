@@ -84,6 +84,9 @@ void Thongke();
 void showNotification(GtkRevealer *, GtkLabel *, gchar *, gint);
 void closeNotification(GtkRevealer *revealer);
 long CreateID();
+void Display();
+void Search();
+void on_searchEntry_delete_text(GtkEditable *searchEntry, gint, gpointer user_data);
 
 gboolean timer_handler(gpointer data)
 {
@@ -139,27 +142,19 @@ void closeNotification(GtkRevealer *revealer)
 	gtk_revealer_set_reveal_child(revealer, FALSE);
 }
 
-// void deletePAKN()
-// {
-// 	int i, del, j;
-// 	// gchar *del_id = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(accountEntry)));
-// 	//del = atoi(del_id);
-// 	for (i = 0; i < sum; ++i)
-// 	{
-// 		if (pakn[i].id == del)
-// 		{
-// 			for (j = i; j < sum - 1; ++j)
-// 				pakn[j] = pakn[j + 1];
-// 			sum--;
-// 			Display();
-// 			Thongke();
-// 		}
-// 	}
-// }
-
 void on_row_activated(GtkTreeView *quanly, GtkTreeViewColumn *treeViewColumn, gpointer user_data)
 {
 	g_print("Double click\n");
+}
+
+void on_searchEntry_activate(GtkEntry *searchEntry, gpointer user_data)
+{
+	Search();
+}
+
+void on_searchEntry_delete_text(GtkEditable *searchEntry, gint i, gpointer user_data)
+{
+	Display();
 }
 
 void deletePAKN()
@@ -174,6 +169,36 @@ void deletePAKN()
 	}
 	else
 	{
+		GtkTreeIter iter;
+		GtkTreeModel *treeModel = NULL;
+		// glong id;
+		// gchar *nguoiphananh, *ngayphananh, *phanloai, *noidung, *trangthai, *phanhoi;
+
+		GList *List = gtk_tree_selection_get_selected_rows(select, &treeModel);
+
+		for (GList *l = List; l != NULL; l = l->next)
+		{
+			// do something with l->data
+			gtk_tree_model_get_iter(treeModel, &iter, l->data);
+			// gtk_tree_model_get(treeModel, &iter,
+			// 									 COL_ID, &id,
+			// 									 COL_NAME, &nguoiphananh,
+			// 									 COL_DATE, &ngayphananh,
+			// 									 COL_TYPE, &phanloai,
+			// 									 COL_CONTENT, &noidung,
+			// 									 COL_STATE, &trangthai,
+			// 									 COL_RESPONSE, &phanhoi,
+			// 									 -1);
+			gtk_list_store_remove(listAllPAKN, &iter);
+			//			g_print("%ld - %s - %s - %s - %s - %s - %s\n", id, nguoiphananh, ngayphananh, phanloai, noidung, trangthai, phanhoi);
+		}
+
+		// g_free(nguoiphananh);
+		// g_free(ngayphananh);
+		// g_free(phanloai);
+		// g_free(noidung);
+		// g_free(trangthai);
+		// g_free(phanhoi);
 	}
 }
 
@@ -283,8 +308,8 @@ void Display()
 											 COL_DATE, pakn[i].ngayphananh,
 											 COL_TYPE, pakn[i].phanloai,
 											 COL_CONTENT, pakn[i].noidung,
-											 COL_STATE, (pakn[i].trangthai == 0) ? "Moi ghi nhan" : (pakn[i].trangthai == 1) ? "Chua giai quyet"
-																																																			 : "Da giai quyet",
+											 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																			 : "Đã giải quyết",
 
 											 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
 											 -1);
@@ -456,23 +481,17 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	ExportToFile();
+	// ExportToFile();
 	gtk_widget_show(loginWindow);
 }
 
 void CombinePAKN(int i, int j)
 {
+	strcat(pakn[i].nguoiphananh, ",");
+	strcat(pakn[i].ngayphananh, ",");
 	strcat(pakn[i].nguoiphananh, pakn[j].nguoiphananh);
 	strcat(pakn[i].ngayphananh, pakn[j].ngayphananh);
 	pakn[i].id = CreateID();
-}
-
-void DeletePAKN(int i)
-{
-	int j;
-	for (j = i; j < sum - 1; ++j)
-		pakn[j] = pakn[j + 1];
-	sum--;
 }
 
 void Combine()
@@ -489,6 +508,8 @@ void Combine()
 					DeletePAKN(j);
 				}
 	}
+	Thongke();
+	Display();
 }
 
 void filter()
@@ -552,7 +573,12 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCombine") == 0)
 	{
-		// Combine();
+		Combine();
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnPrintList") == 0)
+	{
+		Send();
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnFilter") == 0)
@@ -561,17 +587,76 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	}
 }
 
-void ExportToFile()
+void printToFile(FILE *fp, PAKN pakn)
 {
-	FILE *fp = fopen("pakn.txt", "W");
+	char *ptr1, *ptr2;
+	char name[30], date[20];
+	int num = 1, i;
+
+	fprintf(fp, "Nguoi phan anh\tNgay phan anh:\n");
+
+	for (i = 0; i < strlen(pakn.nguoiphananh); ++i)
+		if (pakn.nguoiphananh[i] == ',')
+			num++;
+
+	ptr1 = pakn.nguoiphananh;
+	ptr2 = pakn.ngayphananh;
+
+	for (i = 0; i < num; ++i)
+	{
+		if (i != num - 1)
+		{
+			sscanf(ptr1, "%[^,]", name);
+			sscanf(ptr2, "%[^,]", date);
+			ptr1 = strchr(ptr1, ',') + 1;
+			ptr2 = strchr(ptr2, ',') + 1;
+		}
+		else
+		{
+			strcpy(name, ptr1);
+			strcpy(date, ptr2);
+		}
+		fprintf(fp, "%s\t%s\n", name, date);
+	}
+
+	fprintf(fp, "Phan loai: %s\nNoi dung: %s\n", pakn.phanloai, pakn.noidung);
+
+	return;
+}
+
+void Send()
+{
+	FILE *fp = fopen("send.txt", "w");
+	int i;
+
 	if (fp == NULL)
 		return;
 
-	int i;
+	Combine();
+
+	for (i = 0; i < sum; ++i)
+	{
+		if (pakn[i].trangthai == 0)
+		{
+			printToFile(fp, pakn[i]);
+			pakn[i].trangthai = 1;
+		}
+	}
+
+	Display();
+	Thongke();
+	return;
+}
+
+void ExportToFile()
+{
+	FILE *fp = fopen("pakn.txt", "w");
+	if (fp == NULL)
+		return;
 
 	fprintf(fp, "ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi");
 
-	for (i = 0; i < sum; ++i)
+	for (int i = 0; i < sum; ++i)
 		fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].phanloai, pakn[i].trangthai, pakn[i].phanhoi);
 	fclose(fp);
 	g_free(pakn);
