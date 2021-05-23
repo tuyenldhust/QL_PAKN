@@ -1,10 +1,6 @@
-ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi cua cap tren //Moi ghi nhan: 0; Chua giai quyet:1; Da giai quyet:2;
-20210522110450|Nguyễn Văn C|21/5/2001|Balala|abcxyz|0|Chua co
-20210521103056|Vũ Văn D|19/5/2001|asasf|qwerty|0|Chua co
-20210405090405|Hoàng Văn E|20/5/2001|wwqedvsd|qwgtrhd|2|Se cho nguoi xuong sua
-20210531103056|Vũ Văn F|12/5/2001|asasf|qwerty|0|Chua co
-20210421103056|Vũ Văn G|16/5/2001|asasf|qwerty|0|Chua co
-20210321103056|Vũ Văn H|16/6/2001|asasf|qwerty|1|Chua co
-20210511103056|Vũ Văn J|19/9/2001|asasf|qwerty|0|Chua co
-20210521123056|Vũ Văn K|12/5/2001|asasf|qwerty|0|Chua co
-20210405090405|Hoàng Văn E|20/5/2001|wwqedvsd|qwgtrhd|2|Se cho nguoi xuong sua
+ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi
+20210523104237|Lê Đình Tuyên|23/5/2021|Kế hoạch và đầu tư|Xin cấp phép mở doanh nghiệp|0|Chua co
+20210523104243|Vũ Minh Hải|23/5/2021|Kế hoạch và đầu tư|Xin cấp phép mở doanh nghiệp|0|Chua co
+20210523104252|Hoàng Quốc Bảo|23/5/2021|Ngoại giao|Xin giới thiệu sang Nhật học Tiến sĩ AI/ML|0|Chua co
+20210523104304|Hà Công Tuấn|23/5/2021|Nhân sự|Ứng cử đại biểu HĐND tỉnh|0|Chua co
+20210523104313|Hà Văn Đức|23/5/2021|An ninh trật tự|Yêu cầu thanh tra, xử lý quán Karaoke gây mất trật tự công cộng|0|Chua co
