@@ -180,7 +180,7 @@ void on_searchEntry_delete_text(GtkEditable *searchEntry, gint i, gpointer user_
 void DeleteID(long ID)
 {
 	int i;
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 		if (pakn[i].id == ID)
 			DeletePAKN(i);
 	return;
@@ -250,7 +250,7 @@ void InputFilePAKN()
 
 void login()
 {
-	char read[100], *tmp;
+	char read[100], tmp[50];
 	char name[50] = "Họ và tên: \0", birth[50] = "Ngày sinh: \0", role[30] = "Chức vụ: \0", unit[50] = "Đơn vị: \0";
 	int result = 0;
 	gchar *acc_entry = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(accountEntry)));
@@ -279,16 +279,13 @@ void login()
 		if (fgets(read, sizeof(read), fp) == NULL)
 			break;
 
-		tmp = strchr(read, '|');
-		strncpy(infoAccount.acc, read, tmp - read);
-		infoAccount.acc[tmp - read] = '\0';
-		strncpy(infoAccount.pass, tmp + 1, strchr(tmp + 1, '|') - tmp - 1);
+		sscanf(read, "%[^|]|%[^|]|", infoAccount.acc, infoAccount.pass);
 
-		if (strcmp(infoAccount.acc, acc_entry) == 0 && strcmp(infoAccount.pass, pass_entry) == 0)
+		if ((strcmp(infoAccount.acc, acc_entry) == 0) && (strcmp(infoAccount.pass, pass_entry) == 0))
 		{
 			result = 1;
-			tmp = strchr(tmp + 1, '|') + 1;
-			sscanf(tmp, "%[^|]|%[^|]|%[^|]|%[^\n]\n", infoAccount.name, infoAccount.birthday, infoAccount.role, infoAccount.unit);
+
+			sscanf(read, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^\n]%*c", infoAccount.acc, infoAccount.pass, infoAccount.name, infoAccount.birthday, infoAccount.role, infoAccount.unit);
 			strcat(name, infoAccount.name);
 			strcat(birth, infoAccount.birthday);
 			strcat(role, infoAccount.role);
@@ -297,6 +294,8 @@ void login()
 			gtk_label_set_text(lbl_birthday, birth);
 			gtk_label_set_text(lbl_level, role);
 			gtk_label_set_text(lbl_workplace, unit);
+			sprintf(tmp, "res/avatar/%s.jpg", infoAccount.acc);
+			gtk_image_set_from_file(avatar, tmp);
 			gtk_widget_set_visible(errorLoginLabel, FALSE);
 			gtk_widget_hide(loginWindow);
 			InputFilePAKN();
@@ -314,8 +313,8 @@ void login()
 	gtk_entry_set_text(GTK_ENTRY(passwordEntry), "");
 
 	fclose(fp);
-	g_free(acc_entry);
-	g_free(pass_entry);
+	// g_free(acc_entry);
+	// g_free(pass_entry);
 	return;
 }
 
@@ -324,7 +323,7 @@ void Display()
 	GtkTreeIter iter;
 	gtk_list_store_clear(listAllPAKN);
 	int i = 0;
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		gtk_list_store_append(listAllPAKN, &iter);
 
@@ -339,7 +338,7 @@ void Display()
 						   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
 																										   : "Đã giải quyết",
 
-						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "Chưa có",
+						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
 						   -1);
 	}
 }
@@ -358,7 +357,7 @@ void Search()
 	long devide = 1;
 	for (i = len; i < 14; ++i)
 		devide *= 10;
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		if (pakn[i].id / devide == atol(search))
 		{
@@ -392,7 +391,7 @@ void Thongke()
 
 	GtkTreeIter iter1, iter2, iter3;
 
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		switch (pakn[i].trangthai)
 		{
@@ -552,7 +551,7 @@ void Combine()
 {
 	int num = 1, i, j;
 
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		if (pakn[i].trangthai == 0)
 			for (j = i + 1; j < sum; ++j)
@@ -574,7 +573,7 @@ void filterAListStore(GtkListStore *ls, gchar *quyFilter, gchar *namFilter, int 
 	int i = 0;
 	char day[3], month[3], year[5];
 	int quarter = 0;
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		sscanf(pakn[i].ngayphananh, "%[^/]/%[^/]/%s", day, month, year);
 
@@ -811,7 +810,7 @@ void Send()
 
 	Combine();
 
-	for (i = 0; i < sum; ++i)
+	for (i = sum - 1; i >= 0; --i)
 	{
 		if (pakn[i].trangthai == 0)
 		{
