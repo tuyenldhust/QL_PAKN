@@ -103,6 +103,7 @@ void Display();
 void Search();
 void on_searchEntry_delete_text(GtkEditable *searchEntry, gint, gpointer user_data);
 void DeletePAKN(int i);
+void ExportToFile();
 
 gboolean timer_handler(gpointer data)
 {
@@ -307,7 +308,7 @@ void InputFilePAKN()
 	while (!feof(fp))
 		if (fgets(read, sizeof(read), fp) != NULL)
 		{
-			sscanf(read, "%ld|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^|]%*c", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].ngayphananh, pakn[sum].phanloai, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
+			sscanf(read, "%ld|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^\n]%*c", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].ngayphananh, pakn[sum].phanloai, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
 			sum++;
 		}
 	fclose(fp);
@@ -546,7 +547,7 @@ void AddPAKN()
 			showNotification(revealer, lblNotifi, "Đã thêm trước đó, không cần thêm lại!", 1000);
 			return;
 		}
-	strcpy(new.phanhoi, "Chua co\n");
+	strcpy(new.phanhoi, "Chua co");
 	new.trangthai = 0;
 	GDateTime *date_time;
 	gchar *dt_format;
@@ -592,7 +593,7 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	// ExportToFile();
+	ExportToFile();
 	gtk_widget_show(loginWindow);
 }
 
@@ -712,7 +713,7 @@ void PrintAnalysisStatus(FILE *fp, int status, long min, long max)
 		for (int i = 0; i < sum; ++i)
 			if ((pakn[i].id > min) && (pakn[i].id < max) && (pakn[i].trangthai == 2))
 
-				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s", pakn[i].id, pakn[i].nguoiphananh, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
+				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
 
 	fprintf(fp, "--------------------------------------------------------------------------\n");
 }
@@ -860,7 +861,8 @@ void printToFile(FILE *fp, PAKN pakn)
 		fprintf(fp, "%s\t%s\n", name, date);
 	}
 
-	fprintf(fp, "Phan loai: %s\nNoi dung: %s\n\n", pakn.phanloai, pakn.noidung);
+	fprintf(fp, "Phan loai: %s\nNoi dung: %s\n-----------------------------------------------------\n", pakn.phanloai, pakn.noidung);
+
 
 	return;
 }
@@ -911,7 +913,7 @@ void ExportToFile()
 	fprintf(fp, "ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi\n");
 
 	for (int i = 0; i < sum; ++i)
-		fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s", pakn[i].id, pakn[i].nguoiphananh, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
+		fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
 	fclose(fp);
 	g_free(pakn);
 	return;
@@ -962,7 +964,7 @@ gboolean close_splash_screen(gpointer data)
 void gtk_window_destroy()
 {
 	g_print("See you again!\n");
-	// ExportToFile();
+	ExportToFile();
 	gtk_main_quit();
 }
 
