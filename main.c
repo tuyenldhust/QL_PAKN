@@ -30,9 +30,11 @@ GtkWidget *entryAddName;
 GtkWidget *entryAddType;
 GtkWidget *addContent;
 GtkWidget *revealer;
+GtkWidget *revealer1;
 GtkWidget *revealer2;
 GtkWidget *lblNotifi;
 GtkWidget *lblNotifiAdd;
+GtkWidget *lblNotifiEditView;
 GtkWidget *searchEntry;
 GtkWidget *btnCombine;
 GtkWidget *btnPrint;
@@ -42,6 +44,17 @@ GtkWidget *btnFilter;
 GtkWidget *btnPrintAnalysis;
 GtkWidget *quanly;
 GtkWidget *stackAnalysis;
+GtkWidget *editAndViewWindow;
+GtkWidget *entryEditViewName;
+GtkWidget *entryEditViewType;
+GtkWidget *textviewEditViewContent;
+GtkWidget *lblEditViewResponse;
+GtkWidget *textviewEditViewResponse;
+GtkWidget *btnSave;
+GtkWidget *btnCloseEditViewWindow;
+GtkWidget *scrollForResponse;
+
+int sttInPAKNArr;
 
 typedef struct
 {
@@ -61,7 +74,7 @@ typedef struct
 	char nguoiphananh[500];
 	char ngayphananh[500];
 	char noidung[250];
-	char phanloai[20];
+	char phanloai[60];
 	int trangthai;
 	char phanhoi[200];
 } PAKN;
@@ -161,25 +174,53 @@ void closeNotification(GtkRevealer *revealer)
 {
 	gtk_revealer_set_reveal_child(revealer, FALSE);
 }
-/*
-void PopupEdit(long id)
+
+void Popup(long id, gboolean canEdit)
 {
-	int i;
-	for (i = sum - 1; i >= 0; --i)
-	if (pakn[i].id == id)
+	for (int i = sum - 1; i >= 0; --i)
 	{
-		if (pakn[i].trangthai != 0)
+		if (pakn[i].id == id)
+		{
+			canEdit ? gtk_window_set_title(editAndViewWindow, "Edit Window") : gtk_window_set_title(editAndViewWindow, "View Window");
+			gtk_widget_set_visible(lblEditViewResponse, !canEdit);
+			gtk_widget_set_visible(scrollForResponse, !canEdit);
+			gtk_widget_set_visible(btnSave, canEdit);
+			gtk_editable_set_editable(GTK_EDITABLE(entryEditViewName), canEdit);
+			gtk_editable_set_editable(GTK_EDITABLE(entryEditViewType), canEdit);
+			gtk_text_view_set_editable(textviewEditViewContent, canEdit);
+			gtk_text_view_set_editable(textviewEditViewResponse, canEdit);
+			gtk_entry_set_text(entryEditViewName, pakn[i].nguoiphananh);
+			gtk_entry_set_text(entryEditViewType, pakn[i].phanloai);
+			gtk_text_buffer_set_text(gtk_text_view_get_buffer(textviewEditViewContent), pakn[i].noidung, -1);
+			gtk_text_buffer_set_text(gtk_text_view_get_buffer(textviewEditViewResponse), pakn[i].phanhoi, -1);
+			sttInPAKNArr = i;
+
+			gtk_widget_show(editAndViewWindow);
 			return;
-		
+		}
 	}
 }
-*/
+
+void saveEdit(){
+	GtkTextIter start, end;
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textviewEditViewContent);
+
+	strcpy(pakn[sttInPAKNArr].nguoiphananh, gtk_entry_get_text(entryEditViewName));
+	strcpy(pakn[sttInPAKNArr].phanloai, gtk_entry_get_text(entryEditViewType));
+	gtk_text_buffer_get_bounds(buffer, &start, &end);
+	strcpy(pakn[sttInPAKNArr].noidung, gtk_text_buffer_get_text(buffer, &start, &end, FALSE));
+	gtk_widget_hide(editAndViewWindow);
+	Display();
+	Thongke();
+}
+
 void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data)
 {
 	glong id;
-
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	gchar *trangthai;
+	gboolean canEdit;
 
 	model = gtk_tree_view_get_model(tree_view);
 
@@ -188,8 +229,17 @@ void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColu
 	gtk_tree_model_get(model, &iter,
 										 COL_ID, &id,
 										 -1);
-	gtk_tree_model_get(model, &iter
-											)
+
+	gtk_tree_model_get(model, &iter,
+										 COL_STATE, &trangthai,
+										 -1);
+
+	if ((strcmp(trangthai, "Mới ghi nhận") == 0) && (strcmp(gtk_widget_get_name(GTK_WIDGET(tree_view)), "quanly") == 0))
+		canEdit = TRUE;
+	else
+		canEdit = FALSE;
+
+	Popup(id, canEdit);
 }
 
 void on_searchEntry_activate(GtkEntry *searchEntry, gpointer user_data)
@@ -483,7 +533,7 @@ void AddPAKN()
 
 	if (strlen(content) == 0 || strlen(name) == 0 || strlen(type) == 0)
 	{
-		showNotification(revealer2, lblNotifiAdd, "Nhập đầy đủ thông tin!!!", 1000);
+		showNotification(revealer1, lblNotifiAdd, "Nhập đầy đủ thông tin!!!", 1000);
 		return;
 	}
 
@@ -744,7 +794,7 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCloseNotifiAdd") == 0)
 	{
-		closeNotification(revealer2);
+		closeNotification(revealer1);
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCombine") == 0)
@@ -765,6 +815,16 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnPrintAnalysis") == 0)
 	{
 		PrintAnalysis();
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCloseEditViewWindow") == 0)
+	{
+		gtk_widget_hide(editAndViewWindow);
+	}
+
+	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnSave") == 0)
+	{
+		saveEdit();
 	}
 }
 
@@ -945,6 +1005,7 @@ int main(int argc,
 	entryAddType = GTK_ENTRY(gtk_builder_get_object(builder, "entryAddType"));
 	addContent = GTK_WIDGET(gtk_builder_get_object(builder, "addContent"));
 	revealer = GTK_REVEALER(gtk_builder_get_object(builder, "revealer"));
+	revealer1 = GTK_REVEALER(gtk_builder_get_object(builder, "revealer1"));
 	revealer2 = GTK_REVEALER(gtk_builder_get_object(builder, "revealer2"));
 	lblNotifi = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifi"));
 	lblNotifiAdd = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifiAdd"));
@@ -957,6 +1018,16 @@ int main(int argc,
 	namComboText = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "namComboText"));
 	quanly = GTK_TREE_VIEW(gtk_builder_get_object(builder, "quanly"));
 	stackAnalysis = GTK_STACK(gtk_builder_get_object(builder, "stackAnalysis"));
+	editAndViewWindow = GTK_WINDOW(gtk_builder_get_object(builder, "editAndViewWindow"));
+	entryEditViewName = GTK_ENTRY(gtk_builder_get_object(builder, "entryEditViewName"));
+	entryEditViewType = GTK_ENTRY(gtk_builder_get_object(builder, "entryEditViewType"));
+	textviewEditViewContent = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textviewEditViewContent"));
+	lblEditViewResponse = GTK_LABEL(gtk_builder_get_object(builder, "lblEditViewResponse"));
+	textviewEditViewResponse = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textviewEditViewResponse"));
+	btnSave = GTK_BUTTON(gtk_builder_get_object(builder, "btnSave"));
+	btnCloseEditViewWindow = GTK_BUTTON(gtk_builder_get_object(builder, "btnCloseEditViewWindow"));
+	lblNotifiEditView = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifiEditView"));
+	scrollForResponse = GTK_SCROLLED_WINDOW(gtk_builder_get_object(builder, "scrollForResponse"));
 
 	gchar tmp[10];
 
