@@ -96,9 +96,9 @@ gboolean timer_handler(gpointer data)
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	gtk_label_set_text(GTK_LABEL(data), dt_format);					// update label
+	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
 	g_free(dt_format);
 	return TRUE;
 }
@@ -161,10 +161,35 @@ void closeNotification(GtkRevealer *revealer)
 {
 	gtk_revealer_set_reveal_child(revealer, FALSE);
 }
-
-void on_row_activated(GtkTreeView *quanly, GtkTreeViewColumn *treeViewColumn, gpointer user_data)
+/*
+void PopupEdit(long id)
 {
-	g_print("Double click\n");
+	int i;
+	for (i = sum - 1; i >= 0; --i)
+	if (pakn[i].id == id)
+	{
+		if (pakn[i].trangthai != 0)
+			return;
+		
+	}
+}
+*/
+void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data)
+{
+	glong id;
+
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+
+	model = gtk_tree_view_get_model(tree_view);
+
+	if (!gtk_tree_model_get_iter(model, &iter, path))
+		return;
+	gtk_tree_model_get(model, &iter,
+										 COL_ID, &id,
+										 -1);
+	gtk_tree_model_get(model, &iter
+											)
 }
 
 void on_searchEntry_activate(GtkEntry *searchEntry, gpointer user_data)
@@ -201,11 +226,9 @@ void deletePAKNWithSelect()
 		GtkTreeIter iter;
 		GtkTreeModel *model;
 		gboolean valid;
-		gchar *trangThai;
 		GList *_list = gtk_tree_selection_get_selected_rows(select, &model);
 
 		glong id;
-		gchar *nguoiphananh, *ngayphananh, *phanloai, *noitdung, *phanhoi, *noidung;
 
 		int length = g_list_length(_list);
 		for (int i = 0; i < length; i++)
@@ -213,14 +236,7 @@ void deletePAKNWithSelect()
 			//do some thing with l->data
 			gtk_tree_model_get_iter(model, &iter, _list->data);
 			gtk_tree_model_get(model, &iter,
-							   COL_ID, &id,
-							   COL_NAME, &nguoiphananh,
-							   COL_DATE, &ngayphananh,
-							   COL_TYPE, &phanloai,
-							   COL_CONTENT, &noidung,
-							   COL_STATE, &trangThai,
-							   COL_RESPONSE, &phanhoi,
-							   -1);
+												 COL_ID, &id - 1);
 			DeleteID(id);
 			_list = g_list_next(_list);
 		}
@@ -330,16 +346,16 @@ void Display()
 		/* Fill fields with some data */
 
 		gtk_list_store_set(listAllPAKN, &iter,
-						   COL_ID, pakn[i].id,
-						   COL_NAME, pakn[i].nguoiphananh,
-						   COL_DATE, pakn[i].ngayphananh,
-						   COL_TYPE, pakn[i].phanloai,
-						   COL_CONTENT, pakn[i].noidung,
-						   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																										   : "Đã giải quyết",
+											 COL_ID, pakn[i].id,
+											 COL_NAME, pakn[i].nguoiphananh,
+											 COL_DATE, pakn[i].ngayphananh,
+											 COL_TYPE, pakn[i].phanloai,
+											 COL_CONTENT, pakn[i].noidung,
+											 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																			 : "Đã giải quyết",
 
-						   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-						   -1);
+											 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+											 -1);
 	}
 }
 
@@ -366,16 +382,16 @@ void Search()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listAllPAKN, &iter,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																											   : "Đã giải quyết",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																				 : "Đã giải quyết",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "Chưa có",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "Chưa có",
+												 -1);
 		}
 	}
 	gtk_entry_set_text(GTK_ENTRY(searchEntry), search);
@@ -401,16 +417,16 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listMoiGhiNhan, &iter1,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																											   : "Đã giải quyết",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																				 : "Đã giải quyết",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+												 -1);
 			break;
 
 		case 1:
@@ -419,16 +435,16 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listChuaGiaiQuyet, &iter2,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																											   : "Đã giải quyết",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																				 : "Đã giải quyết",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+												 -1);
 			break;
 
 		default:
@@ -437,16 +453,16 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listDaGiaiQuyet, &iter3,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																											   : "Đã giải quyết",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																				 : "Đã giải quyết",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+												 -1);
 		}
 	}
 }
@@ -485,7 +501,7 @@ void AddPAKN()
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	new.id = second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -511,7 +527,7 @@ long CreateID()
 	gchar *dt_format;
 	int year, month, day, hour, minute, second;
 
-	date_time = g_date_time_new_now_local();						// get local time
+	date_time = g_date_time_new_now_local();												// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	return second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -588,16 +604,16 @@ void filterAListStore(GtkListStore *ls, gchar *quyFilter, gchar *namFilter, int 
 			gtk_list_store_append(ls, &iter);
 
 			gtk_list_store_set(ls, &iter,
-							   COL_ID, pakn[i].id,
-							   COL_NAME, pakn[i].nguoiphananh,
-							   COL_DATE, pakn[i].ngayphananh,
-							   COL_TYPE, pakn[i].phanloai,
-							   COL_CONTENT, pakn[i].noidung,
-							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																											   : "Đã giải quyết",
+												 COL_ID, pakn[i].id,
+												 COL_NAME, pakn[i].nguoiphananh,
+												 COL_DATE, pakn[i].ngayphananh,
+												 COL_TYPE, pakn[i].phanloai,
+												 COL_CONTENT, pakn[i].noidung,
+												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																																																				 : "Đã giải quyết",
 
-							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-							   -1);
+												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+												 -1);
 		}
 	}
 }
@@ -843,7 +859,6 @@ void ExportToFile()
 
 void set_css(void)
 {
-
 	GtkCssProvider *css_provider;
 	GdkDisplay *display;
 	GdkScreen *screen;
@@ -854,7 +869,7 @@ void set_css(void)
 	display = gdk_display_get_default();
 	screen = gdk_display_get_default_screen(display);
 	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider),
-											  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+																						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	gtk_css_provider_load_from_file(css_provider, g_file_new_for_path(css_file), &error);
 	g_object_unref(css_provider);
@@ -892,7 +907,7 @@ void gtk_window_destroy()
 }
 
 int main(int argc,
-		 char *argv[])
+				 char *argv[])
 {
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
