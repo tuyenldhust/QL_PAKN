@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|So lan phan anh|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi
 20210523104237|Lê Đình Tuyên|tuyenld@gmail.com|23/5/2021|Kế hoạch và đầu tư|1|Xin cấp phép mở doanh nghiệp|0|Chưa có
 20210523104243|Vũ Minh Hải|haivm@gmail.com|23/5/2021|Kế hoạch và đầu tư|1|Xin cấp phép mở doanh nghiệp|0|Chưa có
@@ -7,3 +8,14 @@ ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|So lan phan anh|Trang thai|Ph
 20210523221901|Mai Văn Nam|nammv@gmail.com|23/5/2021|Văn hóa - Nghệ thuật|1|Xin cấp phép mở buổi hòa nhạc tại nhà hát thành phố|0|Chưa có
 20210523222658|Nguyễn Thị Lan|lannt@gmail.com|23/5/2021|Hành chính|1|Xin cấp lại căn cước công dân bị mất|0|Chưa có
 20210523223015|Bùi Chí Công|congbc@gmail.com|23/5/2021|Hành chính|1|Xin làm thủ tục thừa kế|0|Chưa có
+=======
+ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi
+20210523104237|Lê Đình Tuyên|23/5/2021|Kế hoạch và đầu tư|Xin cấp phép mở doanh nghiệp|0|Chua co
+20210523104243|Vũ Minh Hải|23/5/2021|Kế hoạch và đầu tư|Xin cấp phép mở doanh nghiệp|0|Chua co
+20210523104252|Hoàng Quốc Bảo|23/5/2021|Ngoại giao|Xin giới thiệu sang Nhật học Tiến sĩ AI/ML|0|Chua co
+20210523104304|Hà Công Tuấn|23/5/2021|Nhân sự|Ứng cử đại biểu HĐND tỉnh|0|Chua co
+20210523104313|Hà Văn Đức|23/5/2021|An ninh trật tự|Yêu cầu thanh tra, xử lý quán Karaoke gây mất trật tự công cộng|0|Chua co
+20210523221901|Mai Văn Nam|23/5/2021|Văn hóa - Nghệ thuật|Xin cấp phép mở buổi hòa nhạc tại nhà hát thành phố|0|Chua co
+20210523222658|Nguyễn Thị Lan|23/5/2021|Hành chính|Xin cấp lại căn cước công dân bị mất|0|Chua co
+20210523223015|Bùi Chí Công|23/5/2021|Hành chính|Xin làm thủ tục thừa kế|0|Chua co
+>>>>>>> 2fb8250a8c73742d6a8f9a50f3a27da8bbc88530

@@ -672,7 +672,7 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	// ExportToFile();
+	ExportToFile();
 	gtk_widget_show(loginWindow);
 }
 
@@ -1119,7 +1119,7 @@ gboolean close_splash_screen(gpointer data)
 void gtk_window_destroy()
 {
 	g_print("See you again!\n");
-	// ExportToFile();
+	ExportToFile();
 	gtk_main_quit();
 }
 
