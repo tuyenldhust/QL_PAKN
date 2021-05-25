@@ -76,6 +76,10 @@ GtkWidget *btnLoadFile;
 GtkWidget *btnCloseLoadFile;
 GtkWidget *dialogFileChooser;
 
+struct smtp *smtp;
+
+int isSMTPSended = 0;
+
 int sttInPAKNArr;
 
 typedef struct
@@ -191,42 +195,9 @@ gboolean on_searchEntry_key_press_event(GtkWidget *searchEntry, GdkEventKey *key
 	return FALSE;
 }
 
-// int connectSMTP()
-// {
-// 	int rc;
-// 	rc = smtp_open(MAIL_SERVER,
-// 								 MAIL_PORT,
-// 								 MAIL_CONNECTION_SECURITY,
-// 								 MAIL_FLAGS,
-// 								 MAIL_CAFILE,
-// 								 &smtp);
-// 	rc = smtp_auth(smtp,
-// 								 MAIL_AUTH,
-// 								 MAIL_USER,
-// 								 MAIL_PASS);
-// 	return rc;
-// }
-
-// int closeSMTP()
-// {
-// 	int rc;
-// 	rc = smtp_close(smtp);
-// 	return rc;
-// }
-
-// void clearAllSMTP()
-// {
-// 	smtp_header_clear_all(smtp);
-// 	smtp_address_clear_all(smtp);
-// 	smtp_attachment_clear_all(smtp);
-// }
-
-int sendMail(char toEmail[], char toName[], char subject[], char body[], char attachment[])
+int connectSMTP()
 {
 	int rc;
-	// connectSMTP();
-	struct smtp *smtp;
-
 	rc = smtp_open(MAIL_SERVER,
 								 MAIL_PORT,
 								 MAIL_CONNECTION_SECURITY,
@@ -237,6 +208,38 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 								 MAIL_AUTH,
 								 MAIL_USER,
 								 MAIL_PASS);
+	return rc;
+}
+
+int closeSMTP()
+{
+	int rc;
+	rc = smtp_close(smtp);
+	return rc;
+}
+
+void clearAllSMTP()
+{
+	smtp_header_clear_all(smtp);
+	smtp_address_clear_all(smtp);
+	smtp_attachment_clear_all(smtp);
+}
+
+int sendMail(char toEmail[], char toName[], char subject[], char body[], char attachment[])
+{
+	int rc;
+	// // connectSMTP();
+
+	// rc = smtp_open(MAIL_SERVER,
+	// 							 MAIL_PORT,
+	// 							 MAIL_CONNECTION_SECURITY,
+	// 							 MAIL_FLAGS,
+	// 							 MAIL_CAFILE,
+	// 							 &smtp);
+	// rc = smtp_auth(smtp,
+	// 							 MAIL_AUTH,
+	// 							 MAIL_USER,
+	// 							 MAIL_PASS);
 
 	rc = smtp_address_add(smtp,
 												SMTP_ADDRESS_FROM,
@@ -261,14 +264,14 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 	}
 	rc = smtp_mail(smtp,
 								 body);
-	// closeSMTP();
+	// // closeSMTP();
 
-	rc = smtp_close(smtp);
-	if (rc != SMTP_STATUS_OK)
-	{
-		fprintf(stderr, "smtp failed: %s\n", smtp_status_code_errstr(rc));
-		return 1;
-	}
+	// rc = smtp_close(smtp);
+	// if (rc != SMTP_STATUS_OK)
+	// {
+	// 	fprintf(stderr, "smtp failed: %s\n", smtp_status_code_errstr(rc));
+	// 	return 1;
+	// }
 
 	return 0;
 }
@@ -668,7 +671,7 @@ void AddPAKN()
 	for (i = sum - 1; i >= 0; --i)
 		if (!strcmp(name, pakn[i].nguoiphananh) && !strcmp(type, pakn[i].phanloai) && !strcmp(pakn[i].noidung, content) && !strcmp(gmail, pakn[i].gmail))
 		{
-			showNotification(revealer, lblNotifi, "Đã thêm trước đó, không cần thêm lại!", 1000);
+			showNotification(revealer1, lblNotifiAdd, "Đã thêm trước đó, không cần thêm lại!", 1000);
 			return;
 		}
 	strcpy(new.phanhoi, "Chưa có");
@@ -688,6 +691,7 @@ void AddPAKN()
 	showNotification(revealer, lblNotifi, "Thêm hoàn tất!", 1000);
 	gtk_entry_set_text(GTK_ENTRY(entryAddName), "");
 	gtk_entry_set_text(GTK_ENTRY(entryAddType), "");
+	gtk_entry_set_text(GTK_ENTRY(entryAddGmail), "");
 	gtk_text_buffer_set_text(gtk_text_view_get_buffer(addContent), "", -1);
 	gtk_widget_hide(addWindow);
 	// g_free(content);
@@ -717,7 +721,7 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	// ExportToFile();
+	ExportToFile();
 	gtk_widget_show(loginWindow);
 }
 
@@ -937,6 +941,7 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnSendSuperior") == 0)
 	{
+		clearAllSMTP();
 		Send();
 		showNotification(revealer, lblNotifi, "Thành công", 1200);
 	}
@@ -981,7 +986,10 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 		}
 		else
 		{
+			// connectSMTP();
 			SendReply(fileName);
+			showNotification(revealer, lblNotifi, "Thành công", 1200);
+			// closeSMTP();
 		}
 	}
 }
@@ -1058,11 +1066,10 @@ void Send()
 
 	Display();
 	Thongke();
-	// connectSMTP();
-	sendMail(MAIL_SUPERIOR, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
-	// closeSMTP();
 
-	remove(send);
+	sendMail(MAIL_SUPERIOR, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
+
+	// remove(send);
 }
 
 void replyUpdate(long id, char *reply)
@@ -1103,8 +1110,8 @@ void replyUpdate(long id, char *reply)
 			strcpy(gmail, ptr3);
 		}
 		sprintf(mail, "Gửi công dân: %s\nVề kiến nghị ngày: %s\nNội dung: %s\n\nPhản hồi của nhà chức trách: %s\n------------------------------------------\nNếu có bất kỳ ý kiến thắc mắc, khiếu nại nào, vui lòng liên hệ phường để được hỗ trợ.", name, date, noidung, reply);
+		clearAllSMTP();
 		sendMail(gmail, "Công dân", "Phản hồi PAKN", mail, "");
-		// clearAllSMTP();
 	}
 }
 void SendReply(char *filename)
@@ -1118,7 +1125,7 @@ void SendReply(char *filename)
 	long id;
 	int i;
 	char reply[200], read[200];
-	// connectSMTP();
+
 	while (!feof(fp))
 	{
 		if (fgets(read, sizeof(read), fp) != NULL)
@@ -1127,7 +1134,7 @@ void SendReply(char *filename)
 			replyUpdate(id, reply);
 		}
 	}
-	// closeSMTP();
+
 	Display();
 	Thongke();
 }
@@ -1192,13 +1199,15 @@ gboolean close_splash_screen(gpointer data)
 void gtk_window_destroy()
 {
 	g_print("See you again!\n");
-	// ExportToFile();
+	closeSMTP();
+	ExportToFile();
 	gtk_main_quit();
 }
 
 int main(int argc,
 				 char *argv[])
 {
+	connectSMTP();
 	///////////////////////////////////////////////////////////////////
 	GtkBuilder *builder;
 	// Khởi tạo GTK

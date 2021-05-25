@@ -1527,9 +1527,9 @@ smtp_puts_dbg(struct smtp *const smtp,
       }
     }
 
-    if(fprintf(stderr, "[smtp %s]: %s\n", prefix, sdup) < 0){
-      /* Do not care if this fails. */
-    }
+    // if(fprintf(stderr, "[smtp %s]: %s\n", prefix, sdup) < 0){
+    //   /* Do not care if this fails. */
+    // }
     free(sdup);
   }
 }
