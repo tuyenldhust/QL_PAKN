@@ -76,8 +76,6 @@ GtkWidget *btnLoadFile;
 GtkWidget *btnCloseLoadFile;
 GtkWidget *dialogFileChooser;
 
-struct smtp *smtp;
-
 int sttInPAKNArr;
 
 typedef struct
@@ -227,6 +225,7 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 {
 	int rc;
 	// connectSMTP();
+	struct smtp *smtp;
 
 	rc = smtp_open(MAIL_SERVER,
 								 MAIL_PORT,
@@ -1104,8 +1103,8 @@ void replyUpdate(long id, char *reply)
 			strcpy(gmail, ptr3);
 		}
 		sprintf(mail, "Gửi công dân: %s\nVề kiến nghị ngày: %s\nNội dung: %s\n\nPhản hồi của nhà chức trách: %s\n------------------------------------------\nNếu có bất kỳ ý kiến thắc mắc, khiếu nại nào, vui lòng liên hệ phường để được hỗ trợ.", name, date, noidung, reply);
-		sendMail(mail, "Công dân", "Phản hồi PAKN", mail, "");
-		clearAllSMTP();
+		sendMail(gmail, "Công dân", "Phản hồi PAKN", mail, "");
+		// clearAllSMTP();
 	}
 }
 void SendReply(char *filename)
