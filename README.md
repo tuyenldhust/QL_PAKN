@@ -1,8 +1,13 @@
 # *QL_PAKN*
-## *A Project of IT4082*
+
+[TOC]
+
+## Introduction
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](#)
 
 A project of IT4082
+
+
 
 ## Features
 
@@ -18,13 +23,23 @@ A project of IT4082
 
 ## Installation
 
-Clone project and run it:
+First, clone this project and change directory to QL_PAKN:
 
-```sh
+```shell
 git clone https://github.com/tuyenldhust/QL_PAKN.git
 cd QL_PAKN
-chmod +x install.sh
-./install.sh
+```
+
+After, install library with below command:
+
+```shell
+chmod +x install_lib.sh && ./install_lib.sh
+```
+
+Finnaly, install program:
+
+```shel
+chmod +x install.sh && ./install.sh
 ```
 
 ## Author
