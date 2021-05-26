@@ -10,7 +10,7 @@
 #define MAIL_PORT "587"
 #define MAIL_CONNECTION_SECURITY SMTP_SECURITY_STARTTLS
 #define MAIL_FLAGS (SMTP_DEBUG | \
-										SMTP_NO_CERT_VERIFY) /* Do not verify cert. */
+					SMTP_NO_CERT_VERIFY) /* Do not verify cert. */
 #define MAIL_CAFILE NULL
 #define MAIL_AUTH SMTP_AUTH_PLAIN
 #define MAIL_USER "tuyenldjp@gmail.com"
@@ -66,8 +66,8 @@ GtkWidget *textviewEditViewResponse;
 GtkWidget *btnSave;
 GtkWidget *btnCloseEditViewWindow;
 GtkWidget *scrollForResponse;
-GtkWidget *entryGmailEditView;
-GtkWidget *entryAddGmail;
+GtkWidget *entryEmailEditView;
+GtkWidget *entryAddEmail;
 GtkWidget *entryNumPAKN;
 GtkWidget *btnSendResponse;
 GtkWidget *btnLoadFile;
@@ -101,7 +101,7 @@ typedef struct
 	char phanloai[60];
 	int trangthai;
 	char phanhoi[200];
-	char gmail[200];
+	char email[200];
 	int solan;
 } PAKN;
 
@@ -112,7 +112,7 @@ enum
 {
 	COL_ID = 0,
 	COL_NAME,
-	COL_GMAIL,
+	COL_EMAIL,
 	COL_DATE,
 	COL_TYPE,
 	COL_NUM,
@@ -139,9 +139,9 @@ gboolean timer_handler(gpointer data)
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();												// get local time
+	date_time = g_date_time_new_now_local();						// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
-	gtk_label_set_text(GTK_LABEL(data), dt_format);									// update label
+	gtk_label_set_text(GTK_LABEL(data), dt_format);					// update label
 	g_free(dt_format);
 	return TRUE;
 }
@@ -197,15 +197,15 @@ int connectSMTP()
 {
 	int rc;
 	rc = smtp_open(MAIL_SERVER,
-								 MAIL_PORT,
-								 MAIL_CONNECTION_SECURITY,
-								 MAIL_FLAGS,
-								 MAIL_CAFILE,
-								 &smtp);
+				   MAIL_PORT,
+				   MAIL_CONNECTION_SECURITY,
+				   MAIL_FLAGS,
+				   MAIL_CAFILE,
+				   &smtp);
 	rc = smtp_auth(smtp,
-								 MAIL_AUTH,
-								 MAIL_USER,
-								 MAIL_PASS);
+				   MAIL_AUTH,
+				   MAIL_USER,
+				   MAIL_PASS);
 	return rc;
 }
 
@@ -232,16 +232,16 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 	sprintf(fromName, "%s - %s - %s", infoAccount.name, infoAccount.role, infoAccount.unit);
 
 	rc = smtp_address_add(smtp,
-												SMTP_ADDRESS_FROM,
-												MAIL_FROM,
-												fromName);
+						  SMTP_ADDRESS_FROM,
+						  MAIL_FROM,
+						  fromName);
 	rc = smtp_address_add(smtp,
-												SMTP_ADDRESS_TO,
-												toEmail,
-												toName);
+						  SMTP_ADDRESS_TO,
+						  toEmail,
+						  toName);
 	rc = smtp_header_add(smtp,
-											 "Subject",
-											 subject);
+						 "Subject",
+						 subject);
 	if (strlen(attachment) != 0)
 	{
 		FILE *f = fopen(attachment, "r");
@@ -253,7 +253,7 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 		rc = smtp_attachment_add_fp(smtp, "Attachment.txt", f);
 	}
 	rc = smtp_mail(smtp,
-								 body);
+				   body);
 
 	return 0;
 }
@@ -283,12 +283,12 @@ void Popup(long id, gboolean canEdit)
 			gtk_widget_set_visible(btnSave, canEdit);
 			gtk_editable_set_editable(GTK_EDITABLE(entryEditViewName), canEdit);
 			gtk_editable_set_editable(GTK_EDITABLE(entryEditViewType), canEdit);
-			gtk_editable_set_editable(GTK_EDITABLE(entryGmailEditView), canEdit);
+			gtk_editable_set_editable(GTK_EDITABLE(entryEmailEditView), canEdit);
 			gtk_text_view_set_editable(textviewEditViewContent, canEdit);
 			gtk_text_view_set_editable(textviewEditViewResponse, canEdit);
 			gtk_entry_set_text(entryEditViewName, pakn[i].nguoiphananh);
 			gtk_entry_set_text(entryEditViewType, pakn[i].phanloai);
-			gtk_entry_set_text(entryGmailEditView, pakn[i].gmail);
+			gtk_entry_set_text(entryEmailEditView, pakn[i].email);
 			sprintf(solan, "%d", pakn[i].solan);
 			gtk_entry_set_text(entryNumPAKN, solan);
 			gtk_text_buffer_set_text(gtk_text_view_get_buffer(textviewEditViewContent), pakn[i].noidung, -1);
@@ -308,7 +308,7 @@ void saveEdit()
 
 	strcpy(pakn[sttInPAKNArr].nguoiphananh, gtk_entry_get_text(entryEditViewName));
 	strcpy(pakn[sttInPAKNArr].phanloai, gtk_entry_get_text(entryEditViewType));
-	strcpy(pakn[sttInPAKNArr].gmail, gtk_entry_get_text(entryGmailEditView));
+	strcpy(pakn[sttInPAKNArr].email, gtk_entry_get_text(entryEmailEditView));
 	gtk_text_buffer_get_bounds(buffer, &start, &end);
 	strcpy(pakn[sttInPAKNArr].noidung, gtk_text_buffer_get_text(buffer, &start, &end, FALSE));
 	gtk_widget_hide(editAndViewWindow);
@@ -329,11 +329,11 @@ void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColu
 	if (!gtk_tree_model_get_iter(model, &iter, path))
 		return;
 	gtk_tree_model_get(model, &iter,
-										 COL_ID, &id,
-										 -1);
+					   COL_ID, &id,
+					   -1);
 	gtk_tree_model_get(model, &iter,
-										 COL_STATE, &trangthai,
-										 -1);
+					   COL_STATE, &trangthai,
+					   -1);
 
 	if ((strcmp(trangthai, "Mới ghi nhận") == 0) && (strcmp(gtk_widget_get_name(GTK_WIDGET(tree_view)), "quanly") == 0))
 		canEdit = TRUE;
@@ -387,8 +387,8 @@ void deletePAKNWithSelect()
 			//do some thing with l->data
 			gtk_tree_model_get_iter(model, &iter, _list->data);
 			gtk_tree_model_get(model, &iter,
-												 COL_ID, &id,
-												 -1);
+							   COL_ID, &id,
+							   -1);
 			DeleteID(id);
 			_list = g_list_next(_list);
 		}
@@ -409,7 +409,7 @@ void InputFilePAKN()
 	while (!feof(fp))
 		if (fgets(read, sizeof(read), fp) != NULL)
 		{
-			sscanf(read, "%ld|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^|]|%d|%[^\n]%*c", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].gmail, pakn[sum].ngayphananh, pakn[sum].phanloai, &pakn[sum].solan, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
+			sscanf(read, "%ld|%[^|]|%[^|]|%[^|]|%[^|]|%d|%[^|]|%d|%[^\n]%*c", &pakn[sum].id, pakn[sum].nguoiphananh, pakn[sum].email, pakn[sum].ngayphananh, pakn[sum].phanloai, &pakn[sum].solan, pakn[sum].noidung, &pakn[sum].trangthai, pakn[sum].phanhoi);
 			sum++;
 		}
 	fclose(fp);
@@ -492,24 +492,65 @@ void Display()
 	gtk_list_store_clear(listAllPAKN);
 	int i = 0;
 	for (i = sum - 1; i >= 0; --i)
-	{
-		gtk_list_store_append(listAllPAKN, &iter);
+		if (pakn[i].trangthai == 0)
+		{
+			gtk_list_store_append(listAllPAKN, &iter);
 
-		/* Fill fields with some data */
+			/* Fill fields with some data */
 
-		gtk_list_store_set(listAllPAKN, &iter,
-											 COL_ID, pakn[i].id,
-											 COL_NAME, pakn[i].nguoiphananh,
-											 COL_GMAIL, pakn[i].gmail,
-											 COL_DATE, pakn[i].ngayphananh,
-											 COL_TYPE, pakn[i].phanloai,
-											 COL_NUM, pakn[i].solan,
-											 COL_CONTENT, pakn[i].noidung,
-											 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																			 : "Đã giải quyết",
-											 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-											 -1);
-	}
+			gtk_list_store_set(listAllPAKN, &iter,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
+		}
+	for (i = sum - 1; i >= 0; --i)
+		if (pakn[i].trangthai == 1)
+		{
+			gtk_list_store_append(listAllPAKN, &iter);
+
+			/* Fill fields with some data */
+
+			gtk_list_store_set(listAllPAKN, &iter,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
+		}
+	for (i = sum - 1; i >= 0; --i)
+		if (pakn[i].trangthai == 2)
+		{
+			gtk_list_store_append(listAllPAKN, &iter);
+
+			/* Fill fields with some data */
+
+			gtk_list_store_set(listAllPAKN, &iter,
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
+		}
 }
 
 void Search()
@@ -535,17 +576,17 @@ void Search()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listAllPAKN, &iter,
-												 COL_ID, pakn[i].id,
-												 COL_NAME, pakn[i].nguoiphananh,
-												 COL_GMAIL, pakn[i].gmail,
-												 COL_DATE, pakn[i].ngayphananh,
-												 COL_TYPE, pakn[i].phanloai,
-												 COL_NUM, pakn[i].solan,
-												 COL_CONTENT, pakn[i].noidung,
-												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																				 : "Đã giải quyết",
-												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-												 -1);
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
 		}
 	}
 	gtk_entry_set_text(GTK_ENTRY(searchEntry), search);
@@ -571,17 +612,17 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listMoiGhiNhan, &iter1,
-												 COL_ID, pakn[i].id,
-												 COL_NAME, pakn[i].nguoiphananh,
-												 COL_GMAIL, pakn[i].gmail,
-												 COL_DATE, pakn[i].ngayphananh,
-												 COL_TYPE, pakn[i].phanloai,
-												 COL_NUM, pakn[i].solan,
-												 COL_CONTENT, pakn[i].noidung,
-												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																				 : "Đã giải quyết",
-												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-												 -1);
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
 			break;
 
 		case 1:
@@ -590,17 +631,17 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listChuaGiaiQuyet, &iter2,
-												 COL_ID, pakn[i].id,
-												 COL_NAME, pakn[i].nguoiphananh,
-												 COL_GMAIL, pakn[i].gmail,
-												 COL_DATE, pakn[i].ngayphananh,
-												 COL_TYPE, pakn[i].phanloai,
-												 COL_NUM, pakn[i].solan,
-												 COL_CONTENT, pakn[i].noidung,
-												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																				 : "Đã giải quyết",
-												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-												 -1);
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
 			break;
 
 		default:
@@ -609,17 +650,17 @@ void Thongke()
 			/* Fill fields with some data */
 
 			gtk_list_store_set(listDaGiaiQuyet, &iter3,
-												 COL_ID, pakn[i].id,
-												 COL_NAME, pakn[i].nguoiphananh,
-												 COL_GMAIL, pakn[i].gmail,
-												 COL_DATE, pakn[i].ngayphananh,
-												 COL_TYPE, pakn[i].phanloai,
-												 COL_NUM, pakn[i].solan,
-												 COL_CONTENT, pakn[i].noidung,
-												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																				 : "Đã giải quyết",
-												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-												 -1);
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
 		}
 	}
 }
@@ -637,7 +678,7 @@ void AddPAKN()
 	content = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
 	gchar *name = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddName)));
 	gchar *type = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddType)));
-	gchar *gmail = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddGmail)));
+	gchar *email = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entryAddEmail)));
 
 	if (strlen(content) == 0 || strlen(name) == 0 || strlen(type) == 0)
 	{
@@ -646,12 +687,12 @@ void AddPAKN()
 	}
 
 	strcpy(new.nguoiphananh, name);
-	strcpy(new.gmail, gmail);
+	strcpy(new.email, email);
 	strcpy(new.phanloai, type);
 	strcpy(new.noidung, content);
 	new.solan = 1;
 	for (i = sum - 1; i >= 0; --i)
-		if (!strcmp(name, pakn[i].nguoiphananh) && !strcmp(type, pakn[i].phanloai) && !strcmp(pakn[i].noidung, content) && !strcmp(gmail, pakn[i].gmail))
+		if (!strcmp(name, pakn[i].nguoiphananh) && !strcmp(type, pakn[i].phanloai) && !strcmp(pakn[i].noidung, content) && !strcmp(email, pakn[i].email))
 		{
 			showNotification(revealer1, lblNotifiAdd, "Đã thêm trước đó, không cần thêm lại!", 1000);
 			return;
@@ -661,7 +702,7 @@ void AddPAKN()
 	GDateTime *date_time;
 	gchar *dt_format;
 
-	date_time = g_date_time_new_now_local();												// get local time
+	date_time = g_date_time_new_now_local();						// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	new.id = second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -673,7 +714,7 @@ void AddPAKN()
 	showNotification(revealer, lblNotifi, "Thêm hoàn tất!", 1000);
 	gtk_entry_set_text(GTK_ENTRY(entryAddName), "");
 	gtk_entry_set_text(GTK_ENTRY(entryAddType), "");
-	gtk_entry_set_text(GTK_ENTRY(entryAddGmail), "");
+	gtk_entry_set_text(GTK_ENTRY(entryAddEmail), "");
 	gtk_text_buffer_set_text(gtk_text_view_get_buffer(addContent), "", -1);
 	gtk_widget_hide(addWindow);
 	// g_free(content);
@@ -688,7 +729,7 @@ long CreateID()
 	gchar *dt_format;
 	int year, month, day, hour, minute, second;
 
-	date_time = g_date_time_new_now_local();												// get local time
+	date_time = g_date_time_new_now_local();						// get local time
 	dt_format = g_date_time_format(date_time, "%H:%M:%S %e/%m/%Y"); // 24hr time format
 	sscanf(dt_format, "%d:%d:%d %d/%d/%d", &hour, &minute, &second, &day, &month, &year);
 	return second + minute * 100 + hour * 10000 + day * 1000000 + month * 100000000 + year * 10000000000;
@@ -703,7 +744,7 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	ExportToFile();
+	// ExportToFile();
 	gtk_widget_show(loginWindow);
 }
 
@@ -719,31 +760,144 @@ void CombinePAKN(int i, int j, int count)
 {
 	strcat(pakn[i].nguoiphananh, ", ");
 	strcat(pakn[i].ngayphananh, ", ");
-	strcat(pakn[i].gmail, ", ");
-	strcat(pakn[i].gmail, pakn[j].gmail);
+	strcat(pakn[i].email, ", ");
+	strcat(pakn[i].email, pakn[j].email);
 	strcat(pakn[i].nguoiphananh, pakn[j].nguoiphananh);
 	strcat(pakn[i].ngayphananh, pakn[j].ngayphananh);
 	pakn[i].solan += pakn[j].solan;
 	pakn[i].id = CreateID() + count;
 }
 
+int Pos(long id)
+{
+	int i;
+	for (i = 0; i < sum; ++i)
+		if (pakn[i].id == id)
+			return i;
+}
+
 void Combine()
 {
-	int num = 1, i, j, count = 0;
+	GtkTreeSelection *select = gtk_tree_view_get_selection(tableQuanLy);
 
-	for (i = sum - 1; i >= 0; --i)
+	int countRowSelected = gtk_tree_selection_count_selected_rows(select);
+
+	if (countRowSelected == 0)
 	{
-		if (pakn[i].trangthai == 0)
-			for (j = i + 1; j < sum; ++j)
-				if (!pakn[j].trangthai && !strcmp(pakn[i].phanloai, pakn[j].phanloai) && !strcmp(pakn[i].noidung, pakn[j].noidung))
-				{
-					CombinePAKN(i, j, count);
-					count++;
-					DeletePAKN(j);
-				}
+		int num = 1, i, j, count = 0;
+
+		for (i = sum - 1; i >= 0; --i)
+		{
+			if (pakn[i].trangthai == 0)
+				for (j = i + 1; j < sum; ++j)
+					if (!pakn[j].trangthai && !strcmp(pakn[i].phanloai, pakn[j].phanloai) && !strcmp(pakn[i].noidung, pakn[j].noidung))
+					{
+						CombinePAKN(i, j, count);
+						count++;
+						DeletePAKN(j);
+					}
+		}
+		Display();
+		Thongke();
 	}
-	Display();
-	Thongke();
+	else
+	{
+		GtkTreeIter iter;
+		GtkTreeModel *model;
+		gboolean valid;
+		GList *_list = gtk_tree_selection_get_selected_rows(select, &model);
+		GList *Node = _list;
+
+		glong id1, id2, del[10];
+		gchar *dieukien1, *phanloai1, *phanloai2, *dieukien2;
+
+		int length = g_list_length(_list), pos, delsum = 0;
+
+		gtk_tree_model_get_iter(model, &iter, Node->data);
+		gtk_tree_model_get(model, &iter,
+						   COL_ID, &id2,
+						   -1);
+		gtk_tree_model_get(model, &iter,
+						   COL_STATE, &dieukien1,
+						   -1);
+		gtk_tree_model_get(model, &iter,
+						   COL_TYPE, &phanloai1,
+						   -1);
+		Node = g_list_next(Node);
+
+		if (strcmp(dieukien1, "Mới ghi nhận") != 0)
+		{
+			showNotification(revealer, lblNotifi, "Vui lòng chọn những phản ánh, kiến nghị mới ghi nhận!", 1000);
+			return;
+		}
+
+		for (int i = 1; i < length; i++)
+		{
+			//do some thing with l->data
+			gtk_tree_model_get_iter(model, &iter, Node->data);
+			gtk_tree_model_get(model, &iter,
+							   COL_ID, &id2,
+							   -1);
+			gtk_tree_model_get(model, &iter,
+							   COL_STATE, &dieukien2,
+							   -1);
+			gtk_tree_model_get(model, &iter,
+							   COL_TYPE, &phanloai2,
+							   -1);
+			Node = g_list_next(Node);
+			if (strcmp(phanloai1, phanloai2) != 0)
+			{
+				showNotification(revealer, lblNotifi, "Phản ánh kiến nghị không cùng loại!", 1000);
+				return;
+			}
+			if (strcmp(dieukien1, "Mới ghi nhận") != 0)
+			{
+				showNotification(revealer, lblNotifi, "Vui lòng chọn những phản ánh, kiến nghị mới ghi nhận!", 1000);
+				return;
+			}
+		}
+
+		Node = g_list_first(_list);
+
+		gtk_tree_model_get_iter(model, &iter, Node->data);
+		gtk_tree_model_get(model, &iter,
+						   COL_ID, &id1,
+						   -1);
+		gtk_tree_model_get(model, &iter,
+						   COL_STATE, &dieukien1,
+						   -1);
+
+		pos = Pos(id1);
+
+		Node = g_list_next(Node);
+
+		for (int i = 1; i < length; i++)
+		{
+			//do some thing with l->data
+			gtk_tree_model_get_iter(model, &iter, Node->data);
+			gtk_tree_model_get(model, &iter,
+							   COL_ID, &id2,
+							   -1);
+			gtk_tree_model_get(model, &iter,
+							   COL_STATE, &dieukien2,
+							   -1);
+			CombinePAKN(pos, Pos(id2), 0);
+			del[delsum++] = id2;
+			Node = g_list_next(Node);
+		}
+
+		for (int i = 0; i < delsum; ++i)
+			DeletePAKN(Pos(del[i]));
+
+		Display();
+		Thongke();
+		g_free(dieukien1);
+		g_free(dieukien2);
+		g_free(phanloai1);
+		g_free(phanloai2);
+	}
+
+	showNotification(revealer, lblNotifi, "Thành công", 1200);
 }
 
 void filterAListStore(GtkListStore *ls, gchar *quyFilter, gchar *namFilter, int type)
@@ -768,17 +922,17 @@ void filterAListStore(GtkListStore *ls, gchar *quyFilter, gchar *namFilter, int 
 			gtk_list_store_append(ls, &iter);
 
 			gtk_list_store_set(ls, &iter,
-												 COL_ID, pakn[i].id,
-												 COL_NAME, pakn[i].nguoiphananh,
-												 COL_GMAIL, pakn[i].gmail,
-												 COL_DATE, pakn[i].ngayphananh,
-												 COL_TYPE, pakn[i].phanloai,
-												 COL_NUM, pakn[i].solan,
-												 COL_CONTENT, pakn[i].noidung,
-												 COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
-																																																				 : "Đã giải quyết",
-												 COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
-												 -1);
+							   COL_ID, pakn[i].id,
+							   COL_NAME, pakn[i].nguoiphananh,
+							   COL_EMAIL, pakn[i].email,
+							   COL_DATE, pakn[i].ngayphananh,
+							   COL_TYPE, pakn[i].phanloai,
+							   COL_NUM, pakn[i].solan,
+							   COL_CONTENT, pakn[i].noidung,
+							   COL_STATE, (pakn[i].trangthai == 0) ? "Mới ghi nhận" : (pakn[i].trangthai == 1) ? "Chưa giải quyết"
+																											   : "Đã giải quyết",
+							   COL_RESPONSE, (pakn[i].trangthai == 2) ? pakn[i].phanhoi : "",
+							   -1);
 		}
 	}
 }
@@ -823,14 +977,14 @@ void PrintAnalysisStatus(FILE *fp, int status, long min, long max)
 		fprintf(fp, "ID|Người phản ánh|Email|Ngày phản ánh|Phân loại|Số lần phản ánh|Nội dung\n\n");
 		for (int i = 0; i < sum; ++i)
 			if ((pakn[i].id > min) && (pakn[i].id < max) && (pakn[i].trangthai == status))
-				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].gmail, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung);
+				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].email, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung);
 	}
 	if (status == 2)
 	{
 		fprintf(fp, "ID|Người phản ánh|Email|Ngày phản ánh|Phân loại|Số lần phản ánh|Nội dung|Phản hồi\n\n");
 		for (int i = 0; i < sum; ++i)
 			if ((pakn[i].id > min) && (pakn[i].id < max) && (pakn[i].trangthai == 2))
-				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].gmail, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung, pakn[i].phanhoi);
+				fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].email, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung, pakn[i].phanhoi);
 	}
 	fprintf(fp, "--------------------------------------------------------------------------\n");
 }
@@ -918,7 +1072,6 @@ void on_btn_clicked(GtkButton *btn, gpointer data)
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnCombine") == 0)
 	{
 		Combine();
-		showNotification(revealer, lblNotifi, "Thành công", 1200);
 	}
 
 	if (strcmp(gtk_widget_get_name(GTK_WIDGET(btn)), "btnSendSuperior") == 0)
@@ -1066,7 +1219,7 @@ void Send()
 
 void replyUpdate(long id, char *reply)
 {
-	char name[50], date[30], gmail[30], *ptr1, *ptr2, *ptr3, mail[1000], noidung[200];
+	char name[50], date[30], email[30], *ptr1, *ptr2, *ptr3, mail[1000], noidung[200];
 	int num = 0, i;
 
 	for (i = sum - 1; i >= 0; --i)
@@ -1077,7 +1230,7 @@ void replyUpdate(long id, char *reply)
 			pakn[i].trangthai = 2;
 			ptr1 = pakn[i].nguoiphananh;
 			ptr2 = pakn[i].ngayphananh;
-			ptr3 = pakn[i].gmail;
+			ptr3 = pakn[i].email;
 			num = pakn[i].solan;
 			break;
 		}
@@ -1090,7 +1243,7 @@ void replyUpdate(long id, char *reply)
 		{
 			sscanf(ptr1, "%[^,]", name);
 			sscanf(ptr2, "%[^,]", date);
-			sscanf(ptr3, "%[^,]", gmail);
+			sscanf(ptr3, "%[^,]", email);
 			ptr1 = strchr(ptr1, ',') + 2;
 			ptr2 = strchr(ptr2, ',') + 2;
 			ptr3 = strchr(ptr3, ',') + 2;
@@ -1099,11 +1252,11 @@ void replyUpdate(long id, char *reply)
 		{
 			strcpy(name, ptr1);
 			strcpy(date, ptr2);
-			strcpy(gmail, ptr3);
+			strcpy(email, ptr3);
 		}
 		sprintf(mail, "Gửi công dân: %s\nVề kiến nghị ngày: %s\nNội dung: %s\n\nPhản hồi của nhà chức trách: %s\n------------------------------------------\nNếu có bất kỳ ý kiến thắc mắc, khiếu nại nào, vui lòng liên hệ phường để được hỗ trợ.", name, date, noidung, reply);
 		clearAllSMTP();
-		sendMail(gmail, "Công dân", "Phản hồi PAKN", mail, "");
+		sendMail(email, "Công dân", "Phản hồi PAKN", mail, "");
 	}
 }
 void SendReply(char *filename)
@@ -1140,7 +1293,7 @@ void ExportToFile()
 	fprintf(fp, "ID|Người phản ánh|Email|Ngày phản ánh|Phân loại|Số lần phản ánh|Nội dung|Trạng thái|Phản hồi //Trang thai: [0] moi them, [1] chua Phản hồi, [2], da Phản hồi\n");
 
 	for (int i = 0; i < sum; ++i)
-		fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].gmail, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
+		fprintf(fp, "%ld|%s|%s|%s|%s|%d|%s|%d|%s\n", pakn[i].id, pakn[i].nguoiphananh, pakn[i].email, pakn[i].ngayphananh, pakn[i].phanloai, pakn[i].solan, pakn[i].noidung, pakn[i].trangthai, pakn[i].phanhoi);
 	fclose(fp);
 	g_free(pakn);
 	return;
@@ -1158,7 +1311,7 @@ void set_css(void)
 	display = gdk_display_get_default();
 	screen = gdk_display_get_default_screen(display);
 	gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(css_provider),
-																						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+											  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	gtk_css_provider_load_from_file(css_provider, g_file_new_for_path(css_file), &error);
 	g_object_unref(css_provider);
@@ -1192,12 +1345,12 @@ void gtk_window_destroy()
 {
 	g_print("See you again!\n");
 	closeSMTP();
-	ExportToFile();
+	// ExportToFile();
 	gtk_main_quit();
 }
 
 int main(int argc,
-				 char *argv[])
+		 char *argv[])
 {
 	connectSMTP();
 	///////////////////////////////////////////////////////////////////
@@ -1259,8 +1412,8 @@ int main(int argc,
 	btnCloseEditViewWindow = GTK_BUTTON(gtk_builder_get_object(builder, "btnCloseEditViewWindow"));
 	lblNotifiEditView = GTK_LABEL(gtk_builder_get_object(builder, "lblNotifiEditView"));
 	scrollForResponse = GTK_SCROLLED_WINDOW(gtk_builder_get_object(builder, "scrollForResponse"));
-	entryGmailEditView = GTK_ENTRY(gtk_builder_get_object(builder, "entryGmailEditView"));
-	entryAddGmail = GTK_ENTRY(gtk_builder_get_object(builder, "entryAddGmail"));
+	entryEmailEditView = GTK_ENTRY(gtk_builder_get_object(builder, "entryEmailEditView"));
+	entryAddEmail = GTK_ENTRY(gtk_builder_get_object(builder, "entryAddEmail"));
 	entryNumPAKN = GTK_ENTRY(gtk_builder_get_object(builder, "entryNumPAKN"));
 	btnSendResponse = GTK_BUTTON(gtk_builder_get_object(builder, "btnSendResponse"));
 	btnLoadFile = GTK_BUTTON(gtk_builder_get_object(builder, "btnLoadFile"));
