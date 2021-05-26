@@ -23,20 +23,21 @@ A project of IT4082
 
 ## Installation
 
-First, clone this project and change directory to QL_PAKN:
+- **First, clone this project and change directory to QL_PAKN:**
 
 ```shell
 git clone https://github.com/tuyenldhust/QL_PAKN.git
 cd QL_PAKN
 ```
 
-After, install library with below command:
+- **After, install library with below command:**
 
 ```shell
 chmod +x install_lib.sh && ./install_lib.sh
 ```
 
-Finnaly, install program:
+- ***Configure mail of superior in superior_mail.txt***
+- ***Run project with below command:***
 
 ```shel
 chmod +x install.sh && ./install.sh
