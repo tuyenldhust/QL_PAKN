@@ -3,7 +3,7 @@ ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|So lan phan anh|Trang thai|Ph
 20210523104243|Vũ Minh Hải|haivm@gmail.com|23/5/2021|Kế hoạch và đầu tư|1|Xin cấp phép mở doanh nghiệp|0|Chưa có
 20210523104252|Hoàng Quốc Bảo|baohq@gmail.com|23/5/2021|Ngoại giao|1|Xin giới thiệu sang Nhật học Tiến sĩ AI/ML|0|Chưa có
 20210523104304|Hà Công Tuấn|ninhthangnb@gmail.com|23/5/2021|Nhân sự|1|Ứng cử đại biểu HĐND tỉnh|0|Chưa có
-20210523104313|Hà Văn Đức|ledinhtuyenpro@gmail.com|23/5/2021|An ninh trật tự|1|Yêu cầu thanh tra, xử lý quán Karaoke gây mất trật tự công cộng|0|Chưa có
-20210523221901|Mai Văn Nam|nammv@gmail.com|23/5/2021|Văn hóa - Nghệ thuật|1|Xin cấp phép mở buổi hòa nhạc tại nhà hát thành phố|0|Chưa có
-20210523222658|Nguyễn Thị Lan|lannt@gmail.com|23/5/2021|Hành chính|1|Xin cấp lại căn cước công dân bị mất|0|Chưa có
+20210523104313|Hà Văn Đức|ledinhtuyenpro@gmail.com|23/5/2021|An ninh trật tự|1|Yêu cầu thanh tra, xử lý quán Karaoke gây mất trật tự công cộng|2|COK
+20210523221901|Mai Văn Nam|nammv@gmail.com|23/5/2021|Văn hóa - Nghệ thuật|1|Xin cấp phép mở buổi hòa nhạc tại nhà hát thành phố|2|OK
+20210523222658|Nguyễn Thị Lan|lannt@gmail.com|23/5/2021|Hành chính|1|Xin cấp lại căn cước công dân bị mất|1|Chưa có
 20210523223015|Bùi Chí Công|congbc@gmail.com|23/5/2021|Hành chính|1|Xin làm thủ tục thừa kế|0|Chưa có

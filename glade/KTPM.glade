@@ -267,8 +267,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
     <property name="title" translatable="yes">Phần mềm quản lý phản ánh, kiến nghị</property>
     <property name="resizable">False</property>
     <property name="window_position">center-always</property>
-    <property name="default_width">480</property>
-    <property name="default_height">640</property>
+    <property name="default_width">400</property>
+    <property name="default_height">300</property>
     <property name="gravity">center</property>
     <signal name="destroy" handler="gtk_window_destroy" swapped="no"/>
     <child type="titlebar">
@@ -538,7 +538,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="model">all_pakn</property>
-                                <property name="headers_clickable">False</property>
                                 <property name="rules_hint">True</property>
                                 <property name="search_column">0</property>
                                 <property name="fixed_height_mode">True</property>
@@ -557,6 +556,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">ID</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">0</property>
                                     <child>
                                       <object class="GtkCellRendererText" id="id"/>
                                       <attributes>
@@ -571,6 +572,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">Người phản ánh</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">1</property>
                                     <child>
                                       <object class="GtkCellRendererText" id="nguoiphananh">
                                         <property name="ellipsize">end</property>
@@ -585,7 +588,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
-                                    <property name="title" translatable="yes">Gmail</property>
+                                    <property name="title" translatable="yes">Email</property>
                                     <property name="expand">True</property>
                                     <child>
                                       <object class="GtkCellRendererText">
@@ -670,6 +673,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">Trạng thái</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_column_id">7</property>
                                     <child>
                                       <object class="GtkCellRendererText" id="trangthai">
                                         <property name="ellipsize">end</property>
@@ -976,7 +980,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="model">moighinhan</property>
-                                <property name="headers_clickable">False</property>
                                 <property name="rules_hint">True</property>
                                 <property name="search_column">0</property>
                                 <property name="fixed_height_mode">True</property>
@@ -994,6 +997,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">ID</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">0</property>
                                     <child>
                                       <object class="GtkCellRendererText"/>
                                       <attributes>
@@ -1007,6 +1012,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">Người phản ánh</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">1</property>
                                     <child>
                                       <object class="GtkCellRendererText">
                                         <property name="ellipsize">end</property>
@@ -1021,7 +1028,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
-                                    <property name="title" translatable="yes">Gmail</property>
+                                    <property name="title" translatable="yes">Email</property>
                                     <property name="expand">True</property>
                                     <child>
                                       <object class="GtkCellRendererText">
@@ -1130,7 +1137,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="model">chuagiaiquyet</property>
-                                <property name="headers_clickable">False</property>
                                 <property name="rules_hint">True</property>
                                 <property name="search_column">0</property>
                                 <property name="fixed_height_mode">True</property>
@@ -1148,6 +1154,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">ID</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">0</property>
                                     <child>
                                       <object class="GtkCellRendererText"/>
                                       <attributes>
@@ -1161,6 +1169,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">Người phản ánh</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">1</property>
                                     <child>
                                       <object class="GtkCellRendererText">
                                         <property name="ellipsize">end</property>
@@ -1175,7 +1185,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
-                                    <property name="title" translatable="yes">Gmail</property>
+                                    <property name="title" translatable="yes">Email</property>
                                     <property name="expand">True</property>
                                     <child>
                                       <object class="GtkCellRendererText">
@@ -1285,7 +1295,6 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="model">dagiaiquyet</property>
-                                <property name="headers_clickable">False</property>
                                 <property name="rules_hint">True</property>
                                 <property name="search_column">0</property>
                                 <property name="fixed_height_mode">True</property>
@@ -1303,6 +1312,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">ID</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">0</property>
                                     <child>
                                       <object class="GtkCellRendererText">
                                         <property name="ellipsize">end</property>
@@ -1319,6 +1330,8 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                     <property name="sizing">fixed</property>
                                     <property name="title" translatable="yes">Người phản ánh</property>
                                     <property name="expand">True</property>
+                                    <property name="sort_indicator">True</property>
+                                    <property name="sort_column_id">1</property>
                                     <child>
                                       <object class="GtkCellRendererText">
                                         <property name="ellipsize">end</property>
@@ -1333,7 +1346,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
-                                    <property name="title" translatable="yes">Gmail</property>
+                                    <property name="title" translatable="yes">Email</property>
                                     <property name="expand">True</property>
                                     <child>
                                       <object class="GtkCellRendererText"/>
@@ -1592,7 +1605,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="margin_top">6</property>
                     <property name="margin_bottom">6</property>
-                    <property name="label" translatable="yes">Gmail liên hệ</property>
+                    <property name="label" translatable="yes">Email liên hệ</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1601,7 +1614,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="entryAddGmail">
+                  <object class="GtkEntry" id="entryAddEmail">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">12</property>
@@ -1943,7 +1956,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                     <property name="can_focus">False</property>
                     <property name="margin_top">6</property>
                     <property name="margin_bottom">6</property>
-                    <property name="label" translatable="yes">Gmail liên hệ</property>
+                    <property name="label" translatable="yes">Email liên hệ</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -1952,7 +1965,7 @@ Author: Vu Minh Hai, Le Dinh Tuyen
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="entryGmailEditView">
+                  <object class="GtkEntry" id="entryEmailEditView">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">12</property>
