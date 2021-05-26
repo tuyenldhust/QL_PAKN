@@ -78,8 +78,9 @@ GtkTreeSortable *sortableQuanLy;
 struct smtp *smtp;
 
 int isSMTPSended = 0;
-
 int sttInPAKNArr;
+
+gboolean inSession = FALSE;
 
 typedef struct
 {
@@ -171,6 +172,7 @@ gboolean close_spinner(gpointer data)
 	}
 
 	gtk_widget_hide((GtkWindow *)data);
+	inSession = TRUE;
 	gtk_window_present(windowMain);
 	k = 0;
 	showNotification(revealer, lblNotifi, "Chào mừng bạn đã quay lại!", 1000);
@@ -798,7 +800,11 @@ void logout()
 	gtk_list_store_clear(listMoiGhiNhan);
 	gtk_list_store_clear(listChuaGiaiQuyet);
 	gtk_list_store_clear(listDaGiaiQuyet);
-	ExportToFile();
+	if (inSession)
+	{
+		ExportToFile();
+		inSession = FALSE;
+	}
 	gtk_widget_show(loginWindow);
 }
 
@@ -1004,7 +1010,8 @@ void filterAListStore(GtkListStore *ls, gchar *quyFilter, gchar *namFilter, int 
 
 			goto label;
 		}
-		else continue;
+		else
+			continue;
 
 	label:
 		if (pakn[i].trangthai == type)
@@ -1435,7 +1442,12 @@ void gtk_window_destroy()
 {
 	g_print("See you again!\n");
 	closeSMTP();
-	ExportToFile();
+	if (inSession)
+	{
+		ExportToFile();
+		inSession = FALSE;
+	}
+
 	gtk_main_quit();
 }
 
@@ -1533,6 +1545,7 @@ int main(int argc,
 		gtk_combo_box_text_append_text(namComboText, tmp);
 	}
 
+	// set_css();
 	// Cấp phát bộ nhớ động
 	pakn = malloc(INIT_PAKN * sizeof(PAKN));
 
