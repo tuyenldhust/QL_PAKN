@@ -6,3 +6,4 @@ ID|Người phản ánh|Email|Ngày phản ánh|Phân loại|Số lần phản �
 20210523221901|Mai Văn Nam|nammv@gmail.com|23/5/2021|Văn hóa - Nghệ thuật|1|Xin cấp phép mở buổi hòa nhạc tại nhà hát thành phố|1|Chưa có
 20210523222658|Nguyễn Thị Lan|lannt@gmail.com|23/5/2021|Hành chính|1|Xin cấp lại căn cước công dân bị mất|1|Chưa có
 20210523223015|Bùi Chí Công|congbc@gmail.com|23/5/2021|Hành chính|1|Xin làm thủ tục thừa kế|1|Chưa có
+20210526114017|Lê Đình Tuyên|ninhthangnb@gmail.com|26/5/2021|Hộ khẩu, nhân khẩu|1|Xin giấy tạm vắng|2|Đồng ý

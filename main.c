@@ -16,8 +16,6 @@
 #define MAIL_USER "tuyenldjp@gmail.com"
 #define MAIL_PASS "xybqcjezjkrzocjo"
 #define MAIL_FROM "noreply@example.org"
-#define MAIL_FROM_NAME "Tổ trưởng phường Bích Đào"
-#define MAIL_SUPERIOR "le.tuyen.hust@gmail.com"
 
 GtkWidget *window_splash_screen;
 GtkWidget *loginWindow;
@@ -228,23 +226,15 @@ void clearAllSMTP()
 int sendMail(char toEmail[], char toName[], char subject[], char body[], char attachment[])
 {
 	int rc;
-	// // connectSMTP();
 
-	// rc = smtp_open(MAIL_SERVER,
-	// 							 MAIL_PORT,
-	// 							 MAIL_CONNECTION_SECURITY,
-	// 							 MAIL_FLAGS,
-	// 							 MAIL_CAFILE,
-	// 							 &smtp);
-	// rc = smtp_auth(smtp,
-	// 							 MAIL_AUTH,
-	// 							 MAIL_USER,
-	// 							 MAIL_PASS);
+	char fromName[100];
+
+	sprintf(fromName, "%s - %s - %s", infoAccount.name, infoAccount.role, infoAccount.unit);
 
 	rc = smtp_address_add(smtp,
 												SMTP_ADDRESS_FROM,
 												MAIL_FROM,
-												MAIL_FROM_NAME);
+												fromName);
 	rc = smtp_address_add(smtp,
 												SMTP_ADDRESS_TO,
 												toEmail,
@@ -264,14 +254,6 @@ int sendMail(char toEmail[], char toName[], char subject[], char body[], char at
 	}
 	rc = smtp_mail(smtp,
 								 body);
-	// // closeSMTP();
-
-	// rc = smtp_close(smtp);
-	// if (rc != SMTP_STATUS_OK)
-	// {
-	// 	fprintf(stderr, "smtp failed: %s\n", smtp_status_code_errstr(rc));
-	// 	return 1;
-	// }
 
 	return 0;
 }
@@ -1037,7 +1019,17 @@ void Send()
 	long id = CreateID();
 	char send[22] = "send";
 	int i;
-	char s[1000];
+	char s[1000], admin_mail[50];
+
+	FILE *f = fopen("admin_mail.txt", "r");
+
+	if (f == NULL)
+	{
+		return;
+	}
+
+	fscanf(f, "%[^\n]%*c", admin_mail);
+	fclose(f);
 
 	for (i = 0; i < 14; ++i)
 	{
@@ -1067,7 +1059,7 @@ void Send()
 	Display();
 	Thongke();
 
-	sendMail(MAIL_SUPERIOR, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
+	sendMail(admin_mail, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
 
 	// remove(send);
 }
