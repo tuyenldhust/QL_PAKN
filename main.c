@@ -1262,16 +1262,16 @@ void Send()
 	long id = CreateID();
 	char send[22] = "send";
 	int i;
-	char s[1000], admin_mail[50];
+	char s[1000], superior_mail[50];
 
-	FILE *f = fopen("admin_mail.txt", "r");
+	FILE *f = fopen("superior_mail.txt", "r");
 
 	if (f == NULL)
 	{
 		return;
 	}
 
-	fscanf(f, "%[^\n]%*c", admin_mail);
+	fscanf(f, "%[^\n]%*c", superior_mail);
 	fclose(f);
 
 	for (i = 0; i < 14; ++i)
@@ -1302,7 +1302,7 @@ void Send()
 	Display();
 	Thongke();
 
-	sendMail(admin_mail, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
+	sendMail(superior_mail, "Cấp trên", "Những kiến nghị cần giải quyết", "", send);
 
 	// remove(send);
 }
