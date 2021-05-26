@@ -14,7 +14,7 @@
 #define MAIL_CAFILE NULL
 #define MAIL_AUTH SMTP_AUTH_PLAIN
 #define MAIL_USER "tuyenldjp@gmail.com"
-#define MAIL_PASS "xybqcjezjkrzocjo"
+#define MAIL_PASS ""
 #define MAIL_FROM "noreply@example.org"
 
 GtkWidget *window_splash_screen;
