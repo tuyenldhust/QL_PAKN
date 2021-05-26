@@ -1,4 +1,4 @@
-ID|Nguoi phan anh|Ngay phan anh|Phan loai|Noi dung|So lan phan anh|Trang thai|Phan hoi //Trang thai: [0] moi them, [1] chua phan hoi, [2], da phan hoi
+ID|Người phản ánh|Email|Ngày phản ánh|Phân loại|Số lần phản ánh|Nội dung|Trạng thái|Phản hồi //Trang thai: [0] moi them, [1] chua Phản hồi, [2], da Phản hồi
 20210523104237|Lê Đình Tuyên|tuyenld@gmail.com|23/5/2021|Kế hoạch và đầu tư|1|Xin cấp phép mở doanh nghiệp|0|Chưa có
 20210523104243|Vũ Minh Hải|haivm@gmail.com|23/5/2021|Kế hoạch và đầu tư|1|Xin cấp phép mở doanh nghiệp|0|Chưa có
 20210523104252|Hoàng Quốc Bảo|baohq@gmail.com|23/5/2021|Ngoại giao|1|Xin giới thiệu sang Nhật học Tiến sĩ AI/ML|0|Chưa có

@@ -1,0 +1,10 @@
+button {
+  background: #4a5a63;
+  text-shadow: 1px 1px 5px black;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px black;
+}
+
+button:hover {
+background: #192225;
+}
